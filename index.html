@@ -7,635 +7,100 @@
     <title>Safe Topup - User Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- PWA Setup Tags -->
-    <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#ff4757">
-    <link rel="apple-touch-icon" href="icon.png">
+    <link rel="apple-touch-icon" href="./icon.png">
 
-    <!-- Firebase Libraries -->
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
 
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', sans-serif;
-        }
-
-        body {
-            background-color: #f5f6fa;
-            color: #2f3542;
-            padding-bottom: 90px;
-        }
-
-        /* Auth Section Styling */
-        #auth-sec {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            background: #f5f6fa;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 9999;
-        }
-
-        .auth-box {
-            background: white;
-            padding: 30px 25px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            width: 90%;
-            max-width: 400px;
-        }
-
-        .auth-box h2 {
-            font-size: 22px;
-            margin-bottom: 5px;
-            color: #2f3542;
-        }
-
-        .auth-box p.subtitle {
-            font-size: 13px;
-            color: #747d8c;
-            margin-bottom: 20px;
-        }
-
-        /* Email/Password Auth Inputs */
-        .auth-input {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 12px;
-            border: 1px solid #ced6e0;
-            border-radius: 8px;
-            font-size: 14px;
-            outline: none;
-            background: #f1f2f6;
-        }
-
-        .auth-input:focus {
-            border-color: #ff4757;
-            background: white;
-        }
-
-        .auth-submit-btn {
-            width: 100%;
-            background: #2f3542;
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 15px;
-            cursor: pointer;
-            margin-bottom: 10px;
-            transition: 0.2s;
-        }
-
-        .auth-submit-btn:active {
-            transform: scale(0.97);
-        }
-
-        .auth-switch {
-            font-size: 13px;
-            color: #747d8c;
-            margin-bottom: 15px;
-        }
-
-        .auth-switch span {
-            color: #ff4757;
-            font-weight: bold;
-            cursor: pointer;
-            text-decoration: underline;
-        }
-
-        .auth-divider {
-            display: flex;
-            align-items: center;
-            margin: 15px 0;
-            color: #a4b0be;
-            font-size: 12px;
-            text-transform: uppercase;
-            font-weight: bold;
-        }
-
-        .auth-divider::before,
-        .auth-divider::after {
-            content: '';
-            flex: 1;
-            border-bottom: 1px solid #dfe4ea;
-        }
-
-        .auth-divider span {
-            padding: 0 10px;
-        }
-
-        .google-btn {
-            background: #ff4757;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-size: 15px;
-            font-weight: bold;
-            width: 100%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3);
-            transition: transform 0.2s;
-        }
-
-        .google-btn:active {
-            transform: scale(0.95);
-        }
-
-        /* Main App Styling */
-        .app-header {
-            background: linear-gradient(135deg, #ff4757, #ee5253);
-            color: white;
-            padding: 20px 15px;
-            border-bottom-left-radius: 20px;
-            border-bottom-right-radius: 20px;
-            box-shadow: 0 4px 15px rgba(238, 82, 83, 0.3);
-            margin-bottom: 20px;
-        }
-
-        .user-profile-section {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .user-welcome p {
-            font-size: 11px;
-            opacity: 0.8;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .user-welcome h2 {
-            font-size: 18px;
-            font-weight: 700;
-            margin-top: 2px;
-        }
-
-        .header-right-actions {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .logout-btn {
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            color: white;
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-        }
-
-        .wallet-card {
-            background: rgba(255, 255, 255, 0.25);
-            padding: 6px 14px;
-            border-radius: 12px;
-            backdrop-filter: blur(6px);
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            min-width: 90px;
-        }
-
-        .wallet-card span {
-            font-size: 10px;
-            display: block;
-            text-transform: uppercase;
-            opacity: 0.9;
-            font-weight: 600;
-        }
-
-        .wallet-card b {
-            font-size: 15px;
-            font-weight: 700;
-        }
-
-        .container {
-            padding: 0 15px;
-        }
-
-        .app-section {
-            display: none;
-        }
-
-        .app-section.active {
-            display: block;
-        }
-
-        .banner-grid-container {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-top: 10px;
-        }
-
-        .category-banner-card {
-            width: 100%;
-            height: 150px;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            position: relative;
-            display: flex;
-            align-items: flex-end;
-            justify-content: flex-start;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            padding: 15px;
-        }
-
-        .category-banner-card:active {
-            transform: scale(0.97);
-        }
-
-        .category-banner-card img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 5;
-            border-radius: 15px;
-        }
-
-        .category-banner-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 60%);
-            z-index: 6;
-            border-radius: 15px;
-        }
-
-        .fallback-text {
-            position: relative;
-            z-index: 10;
-            color: white;
-            font-size: 18px;
-            font-weight: 800;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            text-align: left;
-            display: block !important;
-        }
-
-        .bg-uid { background: #ff4757; }
-        .bg-unipin { background: #2f3542; }
-        .bg-weekly { background: #2ed573; }
-        .bg-level { background: #3742fa; }
-        .bg-indo { background: #ffa502; }
-        .bg-default { background: #747d8c; }
-
-        .view-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 15px;
-        }
-
-        .back-circle-btn {
-            background: white;
-            border: none;
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
-            color: #ff4757;
-        }
-
-        .package-list-wrapper {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .package-row {
-            background: white;
-            border-radius: 12px;
-            padding: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
-            border: 1px solid #e4e7eb;
-        }
-
-        .pkg-info b {
-            font-size: 15px;
-            color: #2f3542;
-            display: block;
-        }
-
-        .pkg-info span {
-            font-size: 13px;
-            color: #ff4757;
-            font-weight: bold;
-        }
-
-        .select-pkg-btn {
-            background: #ff4757;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .checkout-box {
-            background: white;
-            padding: 15px;
-            border-radius: 12px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
-            margin-top: 15px;
-            border: 1px solid #e4e7eb;
-        }
-
-        .form-group {
-            margin-bottom: 12px;
-        }
-
-        .form-group label {
-            font-size: 12px;
-            font-weight: bold;
-            color: #747d8c;
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ced6e0;
-            border-radius: 8px;
-            font-size: 14px;
-            outline: none;
-        }
-
-        .submit-btn {
-            width: 100%;
-            background: #2ed573;
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 14px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
-        .order-card {
-            background: white;
-            padding: 15px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-            margin-bottom: 12px;
-            border: 1px solid #e4e7eb;
-        }
-
-        .order-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-            padding-bottom: 6px;
-            border-bottom: 1px dashed #f1f2f6;
-            font-size: 12px;
-        }
-
-        .status-badge {
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 10px;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        .status-pending { background: #ffeaa7; color: #d35400; }
-        .status-completed { background: #dff9fb; color: #2ed573; }
-        .status-cancelled { background: #ffd2d2; color: #ff4757; }
-
-        .voucher-delivery-box {
-            background: #f1f2f6;
-            border: 1px solid #ced6e0;
-            padding: 10px;
-            border-radius: 8px;
-            margin-top: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .voucher-code-text {
-            font-family: 'Courier New', Courier, monospace;
-            font-weight: bold;
-            font-size: 14px;
-            color: #2f3542;
-        }
-
-        .copy-btn {
-            background: #341f97;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 11px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: white;
-            display: flex;
-            box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.05);
-            border-top: 1px solid #e4e7eb;
-            z-index: 200;
-        }
-
-        .nav-tab {
-            flex: 1;
-            text-align: center;
-            padding: 12px 0;
-            color: #a4b0be;
-            font-size: 11px;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            text-decoration: none;
-        }
-
-        .nav-tab i { font-size: 18px; }
-        .nav-tab.active { color: #ff4757; }
-
-        .loader-text {
-            text-align: center;
-            color: #747d8c;
-            padding: 40px 10px;
-            font-size: 13px;
-        }
-
-        .whatsapp-floating-btn {
-            position: fixed;
-            bottom: 105px;
-            right: 20px;
-            background: #25D366;
-            color: white;
-            width: 55px;
-            height: 55px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            text-decoration: none;
-            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
-            z-index: 999;
-            animation: popupAnimation 3s infinite ease-in-out;
-        }
-
-        @keyframes popupAnimation {
-            0%, 100% { transform: scale(1); box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); }
-            50% { transform: scale(0.88); box-shadow: 0 2px 8px rgba(37, 211, 102, 0.3); }
-        }
-
-        /* --- Custom Logout Modal Styling --- */
-        .custom-modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(3px);
-            display: flex; align-items: center; justify-content: center;
-            z-index: 10000;
-        }
-
-        .custom-modal-box {
-            background: white;
-            padding: 25px;
-            border-radius: 16px;
-            width: 85%;
-            max-width: 320px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            animation: popIn 0.3s ease-out;
-        }
-
-        @keyframes popIn {
-            0% { transform: scale(0.8); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        .custom-modal-box .modal-icon {
-            font-size: 40px;
-            color: #ff4757;
-            margin-bottom: 15px;
-        }
-
-        .custom-modal-box h3 {
-            font-size: 18px;
-            color: #2f3542;
-            margin-bottom: 8px;
-        }
-
-        .custom-modal-box p {
-            font-size: 13px;
-            color: #747d8c;
-            margin-bottom: 20px;
-        }
-
-        .modal-actions {
-            display: flex;
-            gap: 10px;
-            justify-content: space-between;
-        }
-
-        .modal-actions button {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 14px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .btn-cancel {
-            background: #f1f2f6;
-            color: #2f3542;
-        }
-
-        .btn-confirm {
-            background: #ff4757;
-            color: white;
-        }
-
-        .modal-actions button:active {
-            transform: scale(0.95);
-        }
-        /* --- End Custom Logout Modal Styling --- */
-
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: #f5f6fa; color: #2f3542; padding-bottom: 90px; }
+        #auth-sec { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background: #f5f6fa; position: fixed; top: 0; left: 0; width: 100%; z-index: 9999; }
+        .auth-box { background: white; padding: 30px 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); text-align: center; width: 90%; max-width: 400px; }
+        .auth-box h2 { font-size: 22px; margin-bottom: 5px; color: #2f3542; }
+        .auth-box p.subtitle { font-size: 13px; color: #747d8c; margin-bottom: 20px; }
+        .auth-input { width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid #ced6e0; border-radius: 8px; font-size: 14px; outline: none; background: #f1f2f6; }
+        .auth-input:focus { border-color: #ff4757; background: white; }
+        .auth-submit-btn { width: 100%; background: #2f3542; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer; margin-bottom: 10px; transition: 0.2s; }
+        .auth-submit-btn:active { transform: scale(0.97); }
+        .auth-switch { font-size: 13px; color: #747d8c; margin-bottom: 15px; }
+        .auth-switch span { color: #ff4757; font-weight: bold; cursor: pointer; text-decoration: underline; }
+        .auth-divider { display: flex; align-items: center; margin: 15px 0; color: #a4b0be; font-size: 12px; text-transform: uppercase; font-weight: bold; }
+        .auth-divider::before, .auth-divider::after { content: ''; flex: 1; border-bottom: 1px solid #dfe4ea; }
+        .auth-divider span { padding: 0 10px; }
+        .google-btn { background: #ff4757; color: white; border: none; padding: 12px 20px; border-radius: 8px; font-size: 15px; font-weight: bold; width: 100%; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3); transition: transform 0.2s; }
+        .google-btn:active { transform: scale(0.95); }
+        .app-header { background: linear-gradient(135deg, #ff4757, #ee5253); color: white; padding: 20px 15px; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; box-shadow: 0 4px 15px rgba(238, 82, 83, 0.3); margin-bottom: 20px; }
+        .user-profile-section { display: flex; justify-content: space-between; align-items: center; }
+        .user-welcome p { font-size: 11px; opacity: 0.8; text-transform: uppercase; letter-spacing: 0.5px; }
+        .user-welcome h2 { font-size: 18px; font-weight: 700; margin-top: 2px; }
+        .header-right-actions { display: flex; align-items: center; gap: 12px; }
+        .logout-btn { background: rgba(255, 255, 255, 0.2); border: none; color: white; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+        .wallet-card { background: rgba(255, 255, 255, 0.25); padding: 6px 14px; border-radius: 12px; backdrop-filter: blur(6px); text-align: center; border: 1px solid rgba(255, 255, 255, 0.2); min-width: 90px; }
+        .wallet-card span { font-size: 10px; display: block; text-transform: uppercase; opacity: 0.9; font-weight: 600; }
+        .wallet-card b { font-size: 15px; font-weight: 700; }
+        .container { padding: 0 15px; }
+        .app-section { display: none; }
+        .app-section.active { display: block; }
+        .banner-grid-container { display: flex; flex-direction: column; gap: 15px; margin-top: 10px; }
+        .category-banner-card { width: 100%; height: 150px; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; position: relative; display: flex; align-items: flex-end; justify-content: flex-start; border: 1px solid rgba(0, 0, 0, 0.05); padding: 15px; }
+        .category-banner-card:active { transform: scale(0.97); }
+        .category-banner-card img { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 5; border-radius: 15px; }
+        .category-banner-card::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 60%); z-index: 6; border-radius: 15px; }
+        .fallback-text { position: relative; z-index: 10; color: white; font-size: 18px; font-weight: 800; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8); text-transform: uppercase; letter-spacing: 0.5px; text-align: left; display: block !important; }
+        .bg-uid { background: #ff4757; } .bg-unipin { background: #2f3542; } .bg-weekly { background: #2ed573; } .bg-level { background: #3742fa; } .bg-indo { background: #ffa502; } .bg-default { background: #747d8c; }
+        .view-header { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
+        .back-circle-btn { background: white; border: none; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); cursor: pointer; color: #ff4757; }
+        .package-list-wrapper { display: flex; flex-direction: column; gap: 10px; }
+        .package-row { background: white; border-radius: 12px; padding: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02); border: 1px solid #e4e7eb; }
+        .pkg-info b { font-size: 15px; color: #2f3542; display: block; }
+        .pkg-info span { font-size: 13px; color: #ff4757; font-weight: bold; }
+        .select-pkg-btn { background: #ff4757; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: bold; cursor: pointer; }
+        .checkout-box { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05); margin-top: 15px; border: 1px solid #e4e7eb; }
+        .form-group { margin-bottom: 12px; }
+        .form-group label { font-size: 12px; font-weight: bold; color: #747d8c; display: block; margin-bottom: 5px; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ced6e0; border-radius: 8px; font-size: 14px; outline: none; }
+        .submit-btn { width: 100%; background: #2ed573; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; margin-top: 10px; }
+        .order-card { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04); margin-bottom: 12px; border: 1px solid #e4e7eb; }
+        .order-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px dashed #f1f2f6; font-size: 12px; }
+        .status-badge { padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; text-transform: uppercase; }
+        .status-pending { background: #ffeaa7; color: #d35400; } .status-completed { background: #dff9fb; color: #2ed573; } .status-cancelled { background: #ffd2d2; color: #ff4757; }
+        .voucher-delivery-box { background: #f1f2f6; border: 1px solid #ced6e0; padding: 10px; border-radius: 8px; margin-top: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .voucher-code-text { font-family: 'Courier New', Courier, monospace; font-weight: bold; font-size: 14px; color: #2f3542; }
+        .copy-btn { background: #341f97; color: white; border: none; padding: 5px 10px; border-radius: 4px; font-size: 11px; cursor: pointer; font-weight: bold; }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: white; display: flex; box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.05); border-top: 1px solid #e4e7eb; z-index: 200; }
+        .nav-tab { flex: 1; text-align: center; padding: 12px 0; color: #a4b0be; font-size: 11px; font-weight: bold; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; text-decoration: none; }
+        .nav-tab i { font-size: 18px; } .nav-tab.active { color: #ff4757; }
+        .loader-text { text-align: center; color: #747d8c; padding: 40px 10px; font-size: 13px; }
+        .whatsapp-floating-btn { position: fixed; bottom: 105px; right: 20px; background: #25D366; color: white; width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; text-decoration: none; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); z-index: 999; animation: popupAnimation 3s infinite ease-in-out; }
+        @keyframes popupAnimation { 0%, 100% { transform: scale(1); box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); } 50% { transform: scale(0.88); box-shadow: 0 2px 8px rgba(37, 211, 102, 0.3); } }
+        .custom-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(3px); display: flex; align-items: center; justify-content: center; z-index: 10000; }
+        .custom-modal-box { background: white; padding: 25px; border-radius: 16px; width: 85%; max-width: 320px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); animation: popIn 0.3s ease-out; }
+        @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        .custom-modal-box .modal-icon { font-size: 40px; color: #ff4757; margin-bottom: 15px; }
+        .custom-modal-box h3 { font-size: 18px; color: #2f3542; margin-bottom: 8px; }
+        .custom-modal-box p { font-size: 13px; color: #747d8c; margin-bottom: 20px; }
+        .modal-actions { display: flex; gap: 10px; justify-content: space-between; }
+        .modal-actions button { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; transition: 0.2s; }
+        .btn-cancel { background: #f1f2f6; color: #2f3542; } .btn-confirm { background: #ff4757; color: white; }
+        .modal-actions button:active { transform: scale(0.95); }
     </style>
 </head>
 
 <body>
-
-    <!-- Authentication Section -->
     <div id="auth-sec">
         <div class="auth-box">
             <h2>Safe Topup</h2>
             <p class="subtitle" id="auth-subtitle">Login to access your dashboard</p>
-
-            <!-- Login Form -->
             <div id="login-form-wrapper">
                 <input type="email" id="login-email" class="auth-input" placeholder="Email Address">
                 <input type="password" id="login-pass" class="auth-input" placeholder="Password">
                 <button class="auth-submit-btn" onclick="loginWithEmail()">Login</button>
                 <p class="auth-switch">Don't have an account? <span onclick="switchAuthMode('signup')">Create one</span></p>
             </div>
-
-            <!-- Sign Up Form (Hidden initially) -->
             <div id="signup-form-wrapper" style="display: none;">
                 <input type="text" id="signup-name" class="auth-input" placeholder="Full Name">
                 <input type="email" id="signup-email" class="auth-input" placeholder="Email Address">
@@ -643,16 +108,11 @@
                 <button class="auth-submit-btn" onclick="signUpWithEmail()">Create Account</button>
                 <p class="auth-switch">Already have an account? <span onclick="switchAuthMode('login')">Login</span></p>
             </div>
-
             <div class="auth-divider"><span>OR</span></div>
-
-            <button class="google-btn" onclick="loginWithGoogle()">
-                <i class="fa-brands fa-google"></i> Login with Google
-            </button>
+            <button class="google-btn" onclick="loginWithGoogle()"><i class="fa-brands fa-google"></i> Login with Google</button>
         </div>
     </div>
 
-    <!-- Custom Logout Confirmation Modal -->
     <div id="logout-modal" class="custom-modal-overlay" style="display: none;">
         <div class="custom-modal-box">
             <div class="modal-icon"><i class="fa-solid fa-right-from-bracket"></i></div>
@@ -665,9 +125,7 @@
         </div>
     </div>
 
-    <!-- Main Application Interface (Hidden until logged in) -->
     <div id="main-app-ui" style="display: none;">
-
         <div class="app-header">
             <div class="user-profile-section">
                 <div class="user-welcome">
@@ -679,23 +137,14 @@
                         <span>My Balance</span>
                         <b><span id="display-user-balance" style="display:inline;">0</span> Tk</b>
                     </div>
-                    <button class="logout-btn" onclick="logoutUser()" title="Logout">
-                        <i class="fa-solid fa-right-from-bracket"></i>
-                    </button>
+                    <button class="logout-btn" onclick="logoutUser()" title="Logout"><i class="fa-solid fa-right-from-bracket"></i></button>
                 </div>
             </div>
         </div>
-
-        <a href="https://api.whatsapp.com/send?phone=8801909699608" target="_blank" class="whatsapp-floating-btn" title="Contact Support">
-            <i class="fa-brands fa-whatsapp"></i>
-        </a>
-
+        <a href="https://api.whatsapp.com/send?phone=8801909699608" target="_blank" class="whatsapp-floating-btn" title="Contact Support"><i class="fa-brands fa-whatsapp"></i></a>
         <div class="container">
             <div id="home-sec" class="app-section active">
-                <div id="main-categories" class="banner-grid-container">
-                    <div class="loader-text">ক্যাটাগরি লোড হচ্ছে...</div>
-                </div>
-
+                <div id="main-categories" class="banner-grid-container"><div class="loader-text">ক্যাটাগরি লোড হচ্ছে...</div></div>
                 <div id="inner-package-view" style="display: none;">
                     <div class="view-header">
                         <button class="back-circle-btn" onclick="triggerBackAction()"><i class="fa-solid fa-arrow-left"></i></button>
@@ -703,7 +152,6 @@
                     </div>
                     <div id="dynamic-package-rows" class="package-list-wrapper"></div>
                 </div>
-
                 <div id="checkout-form-view" style="display: none;">
                     <div class="view-header">
                         <button class="back-circle-btn" onclick="triggerBackAction()"><i class="fa-solid fa-arrow-left"></i></button>
@@ -712,82 +160,48 @@
                     <div class="checkout-box">
                         <p style="margin-bottom:12px; font-size:14px;">Selected Pack: <b id="checkout-pack-name" style="color:#ff4757;">-</b></p>
                         <p style="margin-bottom:15px; font-size:14px;">Price: <b id="checkout-pack-price" style="color:#2ed573;">0</b> BDT</p>
-
                         <div class="form-group" id="player-uid-input-group" style="display: none;">
                             <label>Player UID (ID)</label>
                             <input type="number" id="order-player-id" placeholder="Enter Free Fire UID">
                         </div>
-
                         <div id="ingame-login-input-group" style="display: none;">
-                            <div class="form-group">
-                                <label>Email or Phone</label>
-                                <input type="text" id="order-game-email" placeholder="Enter Account Email or Phone">
-                            </div>
-                            <div class="form-group">
-                                <label>Password</label>
-                                <input type="text" id="order-game-password" placeholder="Enter Account Password">
-                            </div>
-                            <div class="form-group">
-                                <label>WhatsApp Number</label>
-                                <input type="number" id="order-game-whatsapp" placeholder="Enter WhatsApp Number">
-                            </div>
+                            <div class="form-group"><label>Email or Phone</label><input type="text" id="order-game-email" placeholder="Enter Account Email or Phone"></div>
+                            <div class="form-group"><label>Password</label><input type="text" id="order-game-password" placeholder="Enter Account Password"></div>
+                            <div class="form-group"><label>WhatsApp Number</label><input type="number" id="order-game-whatsapp" placeholder="Enter WhatsApp Number"></div>
                         </div>
-
                         <button class="submit-btn" onclick="submitOrderToFirebase()"><i class="fa-solid fa-bolt"></i> CONFIRM & PAY</button>
                     </div>
                 </div>
             </div>
-
             <div id="deposit-sec" class="app-section">
                 <h3 style="font-size: 16px; margin-bottom: 12px;"><i class="fa-solid fa-wallet"></i> Add Money Wallet</h3>
                 <div class="checkout-box">
-                    <div class="form-group">
-                        <label>Select Payment Method</label>
-                        <select id="deposit-method">
-                            <option value="bKash">bKash (Personal: 01909699608)</option>
-                            <option value="Nagad">Nagad (Personal: 01909699608)</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Amount (BDT)</label>
-                        <input type="number" id="deposit-amount" placeholder="Enter Amount (Min 10 Tk)">
-                    </div>
-                    <div class="form-group">
-                        <label>Transaction ID (TxnID)</label>
-                        <input type="text" id="deposit-txnid" placeholder="Paste Transaction ID here">
-                    </div>
+                    <div class="form-group"><label>Select Payment Method</label><select id="deposit-method"><option value="bKash">bKash (Personal: 01909699608)</option><option value="Nagad">Nagad (Personal: 01909699608)</option></select></div>
+                    <div class="form-group"><label>Amount (BDT)</label><input type="number" id="deposit-amount" placeholder="Enter Amount (Min 10 Tk)"></div>
+                    <div class="form-group"><label>Transaction ID (TxnID)</label><input type="text" id="deposit-txnid" placeholder="Paste Transaction ID here"></div>
                     <button class="submit-btn" style="background:#ff7f50;" onclick="submitDepositRequest()"><i class="fa-solid fa-paper-plane"></i> Submit Request</button>
                 </div>
             </div>
-
             <div id="orders-sec" class="app-section">
                 <h3 style="font-size: 16px; margin-bottom: 12px;"><i class="fa-solid fa-clock-history"></i> My Order History</h3>
-                <div id="my-orders-list-container">
-                    <div class="loader-text">অর্ডার লোড হচ্ছে...</div>
-                </div>
+                <div id="my-orders-list-container"><div class="loader-text">অর্ডার লোড হচ্ছে...</div></div>
             </div>
         </div>
-
         <div class="bottom-nav">
             <div class="nav-tab active" onclick="switchUserTab('home-sec', this)"><i class="fa-solid fa-house"></i>Home</div>
             <div class="nav-tab" onclick="switchUserTab('deposit-sec', this)"><i class="fa-solid fa-money-bill-transfer"></i>Add Money</div>
             <div class="nav-tab" onclick="switchUserTab('orders-sec', this)"><i class="fa-solid fa-cart-shopping"></i>My Orders</div>
         </div>
-    </div> <!-- End Main Application Interface -->
+    </div>
 
     <script>
-        // --- PWA Service Worker Registration ---
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js').then(registration => {
-                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                }).catch(err => {
-                    console.log('ServiceWorker registration failed: ', err);
+                navigator.serviceWorker.register('./sw.js').then(registration => {
+                    console.log('SW Registered');
                 });
             });
         }
-        // ---------------------------------------
-
         const firebaseConfig = {
             apiKey: "AIzaSyCaMigc2pLLtVQHZzmfsTXgaV6omg_9OW0",
             authDomain: "ninja-turnament.firebaseapp.com",
@@ -797,570 +211,35 @@
             messagingSenderId: "802986772862",
             appId: "1:802986772862:web:ccb533ef724bc14ae0cb2f"
         };
-
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
         const auth = firebase.auth();
-
-        let loggedInUserEmail = "";
-        let databaseUserKey = "";
-        let currentUserName = "User";
-        let currentUserBalance = 0;
-
-        let selectedCategoryGlobal = "";
-        let selectedPackNameGlobal = "";
-        let selectedPackPriceGlobal = 0;
-        let selectedCategoryInputType = "";
-
+        let loggedInUserEmail = "", databaseUserKey = "", currentUserName = "User", currentUserBalance = 0;
+        let selectedCategoryGlobal = "", selectedPackNameGlobal = "", selectedPackPriceGlobal = 0, selectedCategoryInputType = "";
         let currentAppState = "home";
-
-        const localBackupData = {
-            "uid_topup": {
-                "bannerUrl": "https://i.postimg.cc/qB91nvnT/1779092808603.png",
-                "inputType": "uid",
-                "packages": [{
-                        "name": "115 Diamonds",
-                        "price": 85
-                    },
-                    {
-                        "name": "240 Diamonds",
-                        "price": 165
-                    },
-                    {
-                        "name": "610 Diamonds",
-                        "price": 410
-                    }
-                ]
-            },
-            "unipin": {
-                "bannerUrl": "https://i.postimg.cc/TYthFp9w/1779092947718.png",
-                "inputType": "voucher",
-                "packages": [{
-                        "name": "UniPin 100 Diamonds",
-                        "price": 85
-                    },
-                    {
-                        "name": "UniPin 210 Diamonds",
-                        "price": 170
-                    }
-                ]
-            },
-            "weekly_lite": {
-                "bannerUrl": "https://i.postimg.cc/90MH7FqM/1779093171967.png",
-                "inputType": "uid",
-                "packages": [{
-                    "name": "Weekly Membership",
-                    "price": 190
-                }]
-            },
-            "levelup_pass": {
-                "bannerUrl": "https://i.postimg.cc/QMk2YWQ0/1779093285926.png",
-                "inputType": "login",
-                "packages": [{
-                    "name": "Level Up Pass",
-                    "price": 175
-                }]
-            },
-            "indonesia_topup": {
-                "bannerUrl": "https://i.postimg.cc/bwGY5Lrd/1779093059159.png",
-                "inputType": "uid",
-                "packages": [{
-                    "name": "Indo 100 Diamonds",
-                    "price": 95
-                }]
-            }
-        };
-
-        // UI Toggle for Auth
-        function switchAuthMode(mode) {
-            if (mode === 'signup') {
-                document.getElementById('login-form-wrapper').style.display = 'none';
-                document.getElementById('signup-form-wrapper').style.display = 'block';
-                document.getElementById('auth-subtitle').innerText = "Create an account to continue";
-            } else {
-                document.getElementById('login-form-wrapper').style.display = 'block';
-                document.getElementById('signup-form-wrapper').style.display = 'none';
-                document.getElementById('auth-subtitle').innerText = "Login to access your dashboard";
-            }
-        }
-
-        // Email Sign Up
-        function signUpWithEmail() {
-            let name = document.getElementById('signup-name').value.trim();
-            let email = document.getElementById('signup-email').value.trim();
-            let pass = document.getElementById('signup-pass').value;
-
-            if (!name || !email || !pass) {
-                alert("সবগুলো ফিল্ড পূরণ কর!");
-                return;
-            }
-            if (pass.length < 6) {
-                alert("পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে!");
-                return;
-            }
-
-            auth.createUserWithEmailAndPassword(email, pass).then(function(userCredential) {
-                return userCredential.user.updateProfile({
-                    displayName: name
-                }).then(() => {
-                    currentUserName = name;
-                    document.getElementById("display-user-name").innerText = currentUserName;
-                    checkAndCreateUserNode();
-                });
-            }).catch(function(error) {
-                alert("অ্যাকাউন্ট তৈরি করা যায়নি: " + error.message);
-            });
-        }
-
-        // Email Login
-        function loginWithEmail() {
-            let email = document.getElementById('login-email').value.trim();
-            let pass = document.getElementById('login-pass').value;
-
-            if (!email || !pass) {
-                alert("ইমেইল ও পাসওয়ার্ড দে!");
-                return;
-            }
-
-            auth.signInWithEmailAndPassword(email, pass).catch(function(error) {
-                alert("লগইন ফেইল: " + error.message);
-            });
-        }
-
-        // Google Login Function
-        function loginWithGoogle() {
-            var provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithPopup(provider).catch(function(error) {
-                console.error("Login Error: ", error);
-                alert("লগইন ফেইল হয়েছে: " + error.message);
-            });
-        }
-
-        // Firebase Auth State Listener
-        auth.onAuthStateChanged(function(user) {
-            if (user) {
-                loggedInUserEmail = user.email;
-                currentUserName = user.displayName || user.email.split('@')[0] || "User";
-                databaseUserKey = loggedInUserEmail.replace(/\./g, ',');
-
-                document.getElementById('auth-sec').style.display = 'none';
-                document.getElementById('main-app-ui').style.display = 'block';
-
-                document.getElementById("display-user-name").innerText = currentUserName;
-
-                checkAndCreateUserNode();
-                listenToUserData();
-                listenToFirebaseCategories();
-                listenToMyOrders();
-                window.history.pushState({
-                    view: "home"
-                }, "");
-            } else {
-                document.getElementById('auth-sec').style.display = 'flex';
-                document.getElementById('main-app-ui').style.display = 'none';
-            }
-        });
-
-        // --- Custom Logout Modal Functions ---
-        function logoutUser() {
-            // আগের confirm() বাদ দিয়ে কাস্টম পপআপ দেখানো হলো
-            document.getElementById('logout-modal').style.display = 'flex';
-        }
-
-        function closeLogoutModal() {
-            document.getElementById('logout-modal').style.display = 'none';
-        }
-
-        function confirmLogout() {
-            closeLogoutModal();
-            auth.signOut();
-        }
-        // ------------------------------------
-
-        window.onpopstate = function(event) {
-            if (currentAppState === "checkout") {
-                document.getElementById("checkout-form-view").style.display = "none";
-                document.getElementById("inner-package-view").style.display = "block";
-                currentAppState = "packages";
-                window.history.pushState({
-                    view: "packages"
-                }, "");
-            } else if (currentAppState === "packages") {
-                document.getElementById("inner-package-view").style.display = "none";
-                document.getElementById("main-categories").style.display = "flex";
-                currentAppState = "home";
-                window.history.pushState({
-                    view: "home"
-                }, "");
-            }
-        };
-
-        function triggerBackAction() {
-            window.history.back();
-        }
-
-        function checkAndCreateUserNode() {
-            database.ref("users/" + databaseUserKey).once("value", function(snapshot) {
-                if (!snapshot.exists()) {
-                    database.ref("users/" + databaseUserKey).set({
-                        name: currentUserName,
-                        email: loggedInUserEmail,
-                        balance: 0
-                    });
-                } else if (!snapshot.val().name || snapshot.val().name === "User") {
-                    database.ref("users/" + databaseUserKey).update({
-                        name: currentUserName
-                    });
-                }
-            });
-        }
-
-        function listenToUserData() {
-            database.ref("users/" + databaseUserKey).on("value", function(snapshot) {
-                if (snapshot.exists()) {
-                    let user = snapshot.val();
-                    currentUserBalance = parseInt(user.balance) || 0;
-                    document.getElementById("display-user-balance").innerText = currentUserBalance;
-                }
-            });
-        }
-
-        function listenToFirebaseCategories() {
-            database.ref("shopProducts").on("value", function(snapshot) {
-                let data = localBackupData;
-                if (snapshot.exists() && snapshot.val()) {
-                    data = snapshot.val();
-                }
-                renderHomeBanners(data);
-            }, function(error) {
-                renderHomeBanners(localBackupData);
-            });
-        }
-
-        function renderHomeBanners(categoriesObject) {
-            const container = document.getElementById("main-categories");
-            container.innerHTML = "";
-
-            Object.keys(categoriesObject).forEach(categoryKey => {
-                let keyLower = categoryKey.toLowerCase();
-                let displayName = categoryKey.replace(/_/g, ' ').toUpperCase();
-
-                let finalBannerUrl = "";
-                if (categoriesObject[categoryKey] && categoriesObject[categoryKey].bannerUrl) {
-                    finalBannerUrl = categoriesObject[categoryKey].bannerUrl;
-                } else if (localBackupData[keyLower]) {
-                    finalBannerUrl = localBackupData[keyLower].bannerUrl;
-                }
-
-                let bgClass = "bg-default";
-                if (keyLower === "uid_topup") {
-                    bgClass = "bg-uid";
-                    displayName = "UID TOPUP";
-                } else if (keyLower === "unipin") {
-                    bgClass = "bg-unipin";
-                    displayName = "UNIPIN VOUCHER";
-                } else if (keyLower === "weekly_lite") {
-                    bgClass = "bg-weekly";
-                    displayName = "WEEKLY MEMBERSHIP";
-                } else if (keyLower === "levelup_pass") {
-                    bgClass = "bg-level";
-                    displayName = "LEVEL UP PASS";
-                } else if (keyLower === "indonesia_topup") {
-                    bgClass = "bg-indo";
-                    displayName = "INDONESIA TOPUP";
-                }
-
-                let imgTag = "";
-                if (finalBannerUrl && finalBannerUrl.trim() !== "") {
-                    imgTag = `<img src="${finalBannerUrl.trim()}" alt="${displayName}">`;
-                }
-
-                let bannerHTML = `
-                    <div class="category-banner-card ${bgClass}" onclick="showPackages('${categoryKey}')">
-                        ${imgTag}
-                        <span class="fallback-text"><b>${displayName}</b></span>
-                    </div>
-                `;
-                container.innerHTML += bannerHTML;
-            });
-
-            if (container.innerHTML === "") {
-                container.innerHTML = '<div class="loader-text">কোনো ক্যাটাগরি খুঁজে পাওয়া যায়নি।</div>';
-            }
-        }
-
-        function showPackages(categoryKey) {
-            selectedCategoryGlobal = categoryKey;
-            let keyLower = categoryKey.toLowerCase();
-
-            database.ref("shopProducts/" + categoryKey).once("value", function(snapshot) {
-                let categoryData = localBackupData[keyLower];
-
-                if (snapshot.exists() && snapshot.val()) {
-                    categoryData = snapshot.val();
-                }
-
-                if (!categoryData) return;
-
-                selectedCategoryInputType = categoryData.inputType || "";
-
-                document.getElementById("main-categories").style.display = "none";
-
-                let prettyTitle = categoryKey.replace(/_/g, ' ').toUpperCase();
-                if (keyLower === 'uid_topup') prettyTitle = "UID TOPUP [BD]";
-                if (keyLower.includes("unipin")) prettyTitle = "UNIPIN VOUCHER";
-
-                document.getElementById("category-view-title").innerText = prettyTitle;
-
-                let rowsContainer = document.getElementById("dynamic-package-rows");
-                rowsContainer.innerHTML = "";
-
-                let items = categoryData.packages || [];
-                items.forEach(item => {
-                    let rowHTML = `
-                        <div class="package-row">
-                            <div class="pkg-info">
-                                <b>${item.name}</b>
-                                <span>Price: ${item.price} Tk</span>
-                            </div>
-                            <button class="select-pkg-btn" onclick="openOrderForm('${item.name}', ${item.price})">Select</button>
-                        </div>
-                    `;
-                    rowsContainer.innerHTML += rowHTML;
-                });
-
-                document.getElementById("inner-package-view").style.display = "block";
-                currentAppState = "packages";
-                window.history.pushState({
-                    view: "packages"
-                }, "");
-            });
-        }
-
-        function openOrderForm(packName, packPrice) {
-            selectedPackNameGlobal = packName;
-            selectedPackPriceGlobal = packPrice;
-
-            document.getElementById("inner-package-view").style.display = "none";
-            document.getElementById("checkout-pack-name").innerText = packName;
-            document.getElementById("checkout-pack-price").innerText = packPrice;
-
-            document.getElementById("order-player-id").value = "";
-            document.getElementById("order-game-email").value = "";
-            document.getElementById("order-game-password").value = "";
-            document.getElementById("order-game-whatsapp").value = "";
-
-            let normalizedPackName = packName.toLowerCase();
-            let normalizedCatName = selectedCategoryGlobal.toLowerCase();
-
-            if (selectedCategoryInputType === "login" || normalizedCatName.includes("level") || normalizedCatName.includes("pass") || normalizedPackName.includes("level up pass")) {
-                document.getElementById("player-uid-input-group").style.display = "none";
-                document.getElementById("ingame-login-input-group").style.display = "block";
-            } else if (selectedCategoryInputType === "voucher" || normalizedCatName.includes("unipin") || normalizedPackName.includes("code")) {
-                document.getElementById("player-uid-input-group").style.display = "none";
-                document.getElementById("ingame-login-input-group").style.display = "none";
-            } else {
-                document.getElementById("player-uid-input-group").style.display = "block";
-                document.getElementById("ingame-login-input-group").style.display = "none";
-            }
-
-            document.getElementById("checkout-form-view").style.display = "block";
-            currentAppState = "checkout";
-            window.history.pushState({
-                view: "checkout"
-            }, "");
-        }
-
-        function submitOrderToFirebase() {
-            let playerId = document.getElementById("order-player-id").value.trim();
-            let gameEmail = document.getElementById("order-game-email").value.trim();
-            let gamePass = document.getElementById("order-game-password").value.trim();
-            let gameWhatsapp = document.getElementById("order-game-whatsapp").value.trim();
-
-            let finalPlayerIdField = "VOUCHER_ORDER";
-            let extraLoginInfo = null;
-            let normalizedPackName = selectedPackNameGlobal.toLowerCase();
-            let normalizedCatName = selectedCategoryGlobal.toLowerCase();
-
-            let isLoginRequired = selectedCategoryInputType === "login" || normalizedCatName.includes("level") || normalizedCatName.includes("pass") || normalizedPackName.includes("level up pass");
-            let isVoucherOnly = selectedCategoryInputType === "voucher" || normalizedCatName.includes("unipin") || normalizedPackName.includes("code");
-
-            if (isLoginRequired) {
-                if (!gameEmail || !gamePass || !gameWhatsapp) {
-                    alert("দয়া করে লগইন ইমেইল/ফোন, পাসওয়ার্ড এবং হোয়াটসঅ্যাপ নাম্বার সব পূরণ কর!");
-                    return;
-                }
-                finalPlayerIdField = "LEVEL_UP_PASS_ORDER";
-                extraLoginInfo = {
-                    accountLogin: gameEmail,
-                    accountPassword: gamePass,
-                    whatsapp: gameWhatsapp
-                };
-            } else if (isVoucherOnly) {
-                finalPlayerIdField = "VOUCHER_ORDER";
-            } else {
-                if (!playerId) {
-                    alert("ইউআইডি কোডটি সঠিকভাবে টাইপ কর!");
-                    return;
-                }
-                finalPlayerIdField = playerId;
-            }
-
-            if (currentUserBalance < selectedPackPriceGlobal) {
-                alert("পর্যাপ্ত ব্যালেন্স নেই! আগে অ্যাড মানি কর।");
-                return;
-            }
-
-            let newOrderId = "ORD" + Math.floor(100000 + Math.random() * 900000);
-
-            let orderData = {
-                orderId: newOrderId,
-                userName: currentUserName,
-                userEmail: loggedInUserEmail,
-                category: selectedCategoryGlobal,
-                packageName: selectedPackNameGlobal,
-                price: selectedPackPriceGlobal,
-                playerId: finalPlayerIdField,
-                status: "pending",
-                deliveredVoucher: "",
-                timestamp: firebase.database.ServerValue.TIMESTAMP
-            };
-
-            if (extraLoginInfo !== null) {
-                orderData.loginData = extraLoginInfo;
-            }
-
-            let updatedBalance = currentUserBalance - selectedPackPriceGlobal;
-
-            database.ref("users/" + databaseUserKey + "/balance").set(updatedBalance, function(error) {
-                if (!error) {
-                    database.ref("orders/" + newOrderId).set(orderData, function(err) {
-                        if (!err) {
-                            alert("তোর অর্ডারটি সফলভাবে সাবমিট হয়েছে! My Orders সেকশনে চেক কর।");
-                            backToHomeHome();
-                        }
-                    });
-                }
-            });
-        }
-
-        function listenToMyOrders() {
-            if (!loggedInUserEmail) return;
-
-            database.ref("orders").orderByChild("userEmail").equalTo(loggedInUserEmail).on("value", function(snapshot) {
-                const container = document.getElementById("my-orders-list-container");
-                container.innerHTML = "";
-
-                if (!snapshot.exists()) {
-                    container.innerHTML = '<div class="loader-text">তুই এখনো কোনো অর্ডার করিসনি!</div>';
-                    return;
-                }
-
-                let myOrdersList = [];
-                snapshot.forEach(function(childSnapshot) {
-                    let order = childSnapshot.val();
-                    myOrdersList.push(order);
-                });
-
-                myOrdersList.sort(function(a, b) {
-                    return (b.timestamp || 0) - (a.timestamp || 0);
-                });
-
-                myOrdersList.forEach(order => {
-                    let orderId = order.orderId;
-                    let badgeColor = order.status === "completed" ? "status-completed" : (order.status === "cancelled" ? "status-cancelled" : "status-pending");
-
-                    let voucherBoxHTML = "";
-                    if (order.status === "completed" && order.category.toLowerCase().includes("unipin") && order.deliveredVoucher) {
-                        voucherBoxHTML = `
-                            <div class="voucher-delivery-box">
-                                <span class="voucher-code-text" id="code-${orderId}">${order.deliveredVoucher}</span>
-                                <button class="copy-btn" onclick="copyVoucherCode('${orderId}')"><i class="fa-solid fa-copy"></i> Copy</button>
-                            </div>
-                        `;
-                    }
-
-                    let targetDisplay = `<b>Target UID:</b> ${order.playerId}`;
-                    if (order.loginData) {
-                        targetDisplay = `<b>Login:</b> ${order.loginData.accountLogin} | <b>WP:</b> ${order.loginData.whatsapp}`;
-                    } else if (order.playerId === "VOUCHER_ORDER") {
-                        targetDisplay = `<b>Type:</b> Direct Code Delivery`;
-                    }
-
-                    let cardHTML = `
-                        <div class="order-card">
-                            <div class="order-card-header">
-                                <span>ID: <b>${order.orderId}</b></span>
-                                <span class="status-badge ${badgeColor}">${order.status}</span>
-                            </div>
-                            <div style="font-size: 13px; line-height: 1.5;">
-                                <p><b>Pack:</b> ${order.packageName}</p>
-                                <p>${targetDisplay}</p>
-                                <p><b>Paid Amount:</b> ${order.price} Tk</p>
-                            </div>
-                            ${voucherBoxHTML}
-                        </div>
-                    `;
-                    container.innerHTML += cardHTML;
-                });
-            });
-        }
-
-        function copyVoucherCode(orderId) {
-            let codeText = document.getElementById("code-" + orderId).innerText;
-            navigator.clipboard.writeText(codeText);
-            alert("ভাউচার কোডটি কপি করা হয়েছে: " + codeText);
-        }
-
-        function submitDepositRequest() {
-            let method = document.getElementById("deposit-method").value;
-            let amount = parseInt(document.getElementById("deposit-amount").value);
-            let txnId = document.getElementById("deposit-txnid").value.trim();
-
-            if (!amount || amount < 10) {
-                alert("সর্বনিম্ন ১০ টাকা ডিপোজিট করতে পারবি!");
-                return;
-            }
-            if (!txnId) {
-                alert("TxnID বক্সে লিখে সাবমিট কর!");
-                return;
-            }
-
-            let newReqId = "REQ" + Math.floor(100000 + Math.random() * 900000);
-            let depositData = {
-                requestId: newReqId,
-                userName: currentUserName,
-                userEmail: loggedInUserEmail,
-                method: method,
-                amount: amount,
-                txnId: txnId,
-                status: "pending"
-            };
-
-            database.ref("addMoneyRequests/" + newReqId).set(depositData, function(error) {
-                if (!error) {
-                    alert("রিকোয়েস্ট পাঠানো হয়েছে! অ্যাডমিন ভেরিফাই করে অ্যাপ্রুভ করলেই ব্যালেন্স পেয়ে যাবি।");
-                    document.getElementById("deposit-amount").value = "";
-                    document.getElementById("deposit-txnid").value = "";
-                }
-            });
-        }
-
-        function switchUserTab(sectionId, element) {
-            document.querySelectorAll('.app-section').forEach(sec => sec.classList.remove('active'));
-            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
-            document.getElementById(sectionId).classList.add('active');
-            if (element) element.classList.add('active');
-            backToHomeHome();
-        }
-
-        function backToHomeHome() {
-            document.getElementById("checkout-form-view").style.display = "none";
-            document.getElementById("inner-package-view").style.display = "none";
-            document.getElementById("main-categories").style.display = "flex";
-            currentAppState = "home";
-        }
+        const localBackupData = { "uid_topup": { "bannerUrl": "https://i.postimg.cc/qB91nvnT/1779092808603.png", "inputType": "uid", "packages": [{ "name": "115 Diamonds", "price": 85 }, { "name": "240 Diamonds", "price": 165 }, { "name": "610 Diamonds", "price": 410 }] }, "unipin": { "bannerUrl": "https://i.postimg.cc/TYthFp9w/1779092947718.png", "inputType": "voucher", "packages": [{ "name": "UniPin 100 Diamonds", "price": 85 }, { "name": "UniPin 210 Diamonds", "price": 170 }] }, "weekly_lite": { "bannerUrl": "https://i.postimg.cc/90MH7FqM/1779093171967.png", "inputType": "uid", "packages": [{ "name": "Weekly Membership", "price": 190 }] }, "levelup_pass": { "bannerUrl": "https://i.postimg.cc/QMk2YWQ0/1779093285926.png", "inputType": "login", "packages": [{ "name": "Level Up Pass", "price": 175 }] }, "indonesia_topup": { "bannerUrl": "https://i.postimg.cc/bwGY5Lrd/1779093059159.png", "inputType": "uid", "packages": [{ "name": "Indo 100 Diamonds", "price": 95 }] } };
+        function switchAuthMode(mode) { if (mode === 'signup') { document.getElementById('login-form-wrapper').style.display = 'none'; document.getElementById('signup-form-wrapper').style.display = 'block'; document.getElementById('auth-subtitle').innerText = "Create an account to continue"; } else { document.getElementById('login-form-wrapper').style.display = 'block'; document.getElementById('signup-form-wrapper').style.display = 'none'; document.getElementById('auth-subtitle').innerText = "Login to access your dashboard"; } }
+        function signUpWithEmail() { let name = document.getElementById('signup-name').value.trim(); let email = document.getElementById('signup-email').value.trim(); let pass = document.getElementById('signup-pass').value; if (!name || !email || !pass) { alert("সবগুলো ফিল্ড পূরণ কর!"); return; } if (pass.length < 6) { alert("পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে!"); return; } auth.createUserWithEmailAndPassword(email, pass).then(function(userCredential) { return userCredential.user.updateProfile({ displayName: name }).then(() => { currentUserName = name; document.getElementById("display-user-name").innerText = currentUserName; checkAndCreateUserNode(); }); }).catch(function(error) { alert("অ্যাকাউন্ট তৈরি করা যায়নি: " + error.message); }); }
+        function loginWithEmail() { let email = document.getElementById('login-email').value.trim(); let pass = document.getElementById('login-pass').value; if (!email || !pass) { alert("ইমেইল ও পাসওয়ার্ড দে!"); return; } auth.signInWithEmailAndPassword(email, pass).catch(function(error) { alert("লগইন ফেইল: " + error.message); }); }
+        function loginWithGoogle() { var provider = new firebase.auth.GoogleAuthProvider(); auth.signInWithPopup(provider).catch(function(error) { console.error("Login Error: ", error); alert("লগইন ফেইল হয়েছে: " + error.message); }); }
+        auth.onAuthStateChanged(function(user) { if (user) { loggedInUserEmail = user.email; currentUserName = user.displayName || user.email.split('@')[0] || "User"; databaseUserKey = loggedInUserEmail.replace(/\./g, ','); document.getElementById('auth-sec').style.display = 'none'; document.getElementById('main-app-ui').style.display = 'block'; document.getElementById("display-user-name").innerText = currentUserName; checkAndCreateUserNode(); listenToUserData(); listenToFirebaseCategories(); listenToMyOrders(); window.history.pushState({ view: "home" }, ""); } else { document.getElementById('auth-sec').style.display = 'flex'; document.getElementById('main-app-ui').style.display = 'none'; } });
+        function logoutUser() { document.getElementById('logout-modal').style.display = 'flex'; }
+        function closeLogoutModal() { document.getElementById('logout-modal').style.display = 'none'; }
+        function confirmLogout() { closeLogoutModal(); auth.signOut(); }
+        window.onpopstate = function(event) { if (currentAppState === "checkout") { document.getElementById("checkout-form-view").style.display = "none"; document.getElementById("inner-package-view").style.display = "block"; currentAppState = "packages"; window.history.pushState({ view: "packages" }, ""); } else if (currentAppState === "packages") { document.getElementById("inner-package-view").style.display = "none"; document.getElementById("main-categories").style.display = "flex"; currentAppState = "home"; window.history.pushState({ view: "home" }, ""); } };
+        function triggerBackAction() { window.history.back(); }
+        function checkAndCreateUserNode() { database.ref("users/" + databaseUserKey).once("value", function(snapshot) { if (!snapshot.exists()) { database.ref("users/" + databaseUserKey).set({ name: currentUserName, email: loggedInUserEmail, balance: 0 }); } else if (!snapshot.val().name || snapshot.val().name === "User") { database.ref("users/" + databaseUserKey).update({ name: currentUserName }); } }); }
+        function listenToUserData() { database.ref("users/" + databaseUserKey).on("value", function(snapshot) { if (snapshot.exists()) { let user = snapshot.val(); currentUserBalance = parseInt(user.balance) || 0; document.getElementById("display-user-balance").innerText = currentUserBalance; } }); }
+        function listenToFirebaseCategories() { database.ref("shopProducts").on("value", function(snapshot) { let data = localBackupData; if (snapshot.exists() && snapshot.val()) { data = snapshot.val(); } renderHomeBanners(data); }, function(error) { renderHomeBanners(localBackupData); }); }
+        function renderHomeBanners(categoriesObject) { const container = document.getElementById("main-categories"); container.innerHTML = ""; Object.keys(categoriesObject).forEach(categoryKey => { let keyLower = categoryKey.toLowerCase(); let displayName = categoryKey.replace(/_/g, ' ').toUpperCase(); let finalBannerUrl = ""; if (categoriesObject[categoryKey] && categoriesObject[categoryKey].bannerUrl) { finalBannerUrl = categoriesObject[categoryKey].bannerUrl; } else if (localBackupData[keyLower]) { finalBannerUrl = localBackupData[keyLower].bannerUrl; } let bgClass = "bg-default"; if (keyLower === "uid_topup") { bgClass = "bg-uid"; displayName = "UID TOPUP"; } else if (keyLower === "unipin") { bgClass = "bg-unipin"; displayName = "UNIPIN VOUCHER"; } else if (keyLower === "weekly_lite") { bgClass = "bg-weekly"; displayName = "WEEKLY MEMBERSHIP"; } else if (keyLower === "levelup_pass") { bgClass = "bg-level"; displayName = "LEVEL UP PASS"; } else if (keyLower === "indonesia_topup") { bgClass = "bg-indo"; displayName = "INDONESIA TOPUP"; } let imgTag = ""; if (finalBannerUrl && finalBannerUrl.trim() !== "") { imgTag = `<img src="${finalBannerUrl.trim()}" alt="${displayName}">`; } let bannerHTML = `<div class="category-banner-card ${bgClass}" onclick="showPackages('${categoryKey}')">${imgTag}<span class="fallback-text"><b>${displayName}</b></span></div>`; container.innerHTML += bannerHTML; }); if (container.innerHTML === "") { container.innerHTML = '<div class="loader-text">কোনো ক্যাটাগরি খুঁজে পাওয়া যায়নি।</div>'; } }
+        function showPackages(categoryKey) { selectedCategoryGlobal = categoryKey; let keyLower = categoryKey.toLowerCase(); database.ref("shopProducts/" + categoryKey).once("value", function(snapshot) { let categoryData = localBackupData[keyLower]; if (snapshot.exists() && snapshot.val()) { categoryData = snapshot.val(); } if (!categoryData) return; selectedCategoryInputType = categoryData.inputType || ""; document.getElementById("main-categories").style.display = "none"; let prettyTitle = categoryKey.replace(/_/g, ' ').toUpperCase(); if (keyLower === 'uid_topup') prettyTitle = "UID TOPUP [BD]"; if (keyLower.includes("unipin")) prettyTitle = "UNIPIN VOUCHER"; document.getElementById("category-view-title").innerText = prettyTitle; let rowsContainer = document.getElementById("dynamic-package-rows"); rowsContainer.innerHTML = ""; let items = categoryData.packages || []; items.forEach(item => { let rowHTML = `<div class="package-row"><div class="pkg-info"><b>${item.name}</b><span>Price: ${item.price} Tk</span></div><button class="select-pkg-btn" onclick="openOrderForm('${item.name}', ${item.price})">Select</button></div>`; rowsContainer.innerHTML += rowHTML; }); document.getElementById("inner-package-view").style.display = "block"; currentAppState = "packages"; window.history.pushState({ view: "packages" }, ""); }); }
+        function openOrderForm(packName, packPrice) { selectedPackNameGlobal = packName; selectedPackPriceGlobal = packPrice; document.getElementById("inner-package-view").style.display = "none"; document.getElementById("checkout-pack-name").innerText = packName; document.getElementById("checkout-pack-price").innerText = packPrice; document.getElementById("order-player-id").value = ""; document.getElementById("order-game-email").value = ""; document.getElementById("order-game-password").value = ""; document.getElementById("order-game-whatsapp").value = ""; let normalizedPackName = packName.toLowerCase(); let normalizedCatName = selectedCategoryGlobal.toLowerCase(); if (selectedCategoryInputType === "login" || normalizedCatName.includes("level") || normalizedCatName.includes("pass") || normalizedPackName.includes("level up pass")) { document.getElementById("player-uid-input-group").style.display = "none"; document.getElementById("ingame-login-input-group").style.display = "block"; } else if (selectedCategoryInputType === "voucher" || normalizedCatName.includes("unipin") || normalizedPackName.includes("code")) { document.getElementById("player-uid-input-group").style.display = "none"; document.getElementById("ingame-login-input-group").style.display = "none"; } else { document.getElementById("player-uid-input-group").style.display = "block"; document.getElementById("ingame-login-input-group").style.display = "none"; } document.getElementById("checkout-form-view").style.display = "block"; currentAppState = "checkout"; window.history.pushState({ view: "checkout" }, ""); }
+        function submitOrderToFirebase() { let playerId = document.getElementById("order-player-id").value.trim(); let gameEmail = document.getElementById("order-game-email").value.trim(); let gamePass = document.getElementById("order-game-password").value.trim(); let gameWhatsapp = document.getElementById("order-game-whatsapp").value.trim(); let finalPlayerIdField = "VOUCHER_ORDER"; let extraLoginInfo = null; let normalizedPackName = selectedPackNameGlobal.toLowerCase(); let normalizedCatName = selectedCategoryGlobal.toLowerCase(); let isLoginRequired = selectedCategoryInputType === "login" || normalizedCatName.includes("level") || normalizedCatName.includes("pass") || normalizedPackName.includes("level up pass"); let isVoucherOnly = selectedCategoryInputType === "voucher" || normalizedCatName.includes("unipin") || normalizedPackName.includes("code"); if (isLoginRequired) { if (!gameEmail || !gamePass || !gameWhatsapp) { alert("দয়া করে লগইন ইমেইল/ফোন, পাসওয়ার্ড এবং হোয়াটসঅ্যাপ নাম্বার সব পূরণ কর!"); return; } finalPlayerIdField = "LEVEL_UP_PASS_ORDER"; extraLoginInfo = { accountLogin: gameEmail, accountPassword: gamePass, whatsapp: gameWhatsapp }; } else if (isVoucherOnly) { finalPlayerIdField = "VOUCHER_ORDER"; } else { if (!playerId) { alert("ইউআইডি কোডটি সঠিকভাবে টাইপ কর!"); return; } finalPlayerIdField = playerId; } if (currentUserBalance < selectedPackPriceGlobal) { alert("পর্যাপ্ত ব্যালেন্স নেই! আগে অ্যাড মানি কর।"); return; } let newOrderId = "ORD" + Math.floor(100000 + Math.random() * 900000); let orderData = { orderId: newOrderId, userName: currentUserName, userEmail: loggedInUserEmail, category: selectedCategoryGlobal, packageName: selectedPackNameGlobal, price: selectedPackPriceGlobal, playerId: finalPlayerIdField, status: "pending", deliveredVoucher: "", timestamp: firebase.database.ServerValue.TIMESTAMP }; if (extraLoginInfo !== null) { orderData.loginData = extraLoginInfo; } let updatedBalance = currentUserBalance - selectedPackPriceGlobal; database.ref("users/" + databaseUserKey + "/balance").set(updatedBalance, function(error) { if (!error) { database.ref("orders/" + newOrderId).set(orderData, function(err) { if (!err) { alert("তোর অর্ডারটি সফলভাবে সাবমিট হয়েছে! My Orders সেকশনে চেক কর।"); backToHomeHome(); } }); } }); }
+        function listenToMyOrders() { if (!loggedInUserEmail) return; database.ref("orders").orderByChild("userEmail").equalTo(loggedInUserEmail).on("value", function(snapshot) { const container = document.getElementById("my-orders-list-container"); container.innerHTML = ""; if (!snapshot.exists()) { container.innerHTML = '<div class="loader-text">তুই এখনো কোনো অর্ডার করিসনি!</div>'; return; } let myOrdersList = []; snapshot.forEach(function(childSnapshot) { let order = childSnapshot.val(); myOrdersList.push(order); }); myOrdersList.sort(function(a, b) { return (b.timestamp || 0) - (a.timestamp || 0); }); myOrdersList.forEach(order => { let orderId = order.orderId; let badgeColor = order.status === "completed" ? "status-completed" : (order.status === "cancelled" ? "status-cancelled" : "status-pending"); let voucherBoxHTML = ""; if (order.status === "completed" && order.category.toLowerCase().includes("unipin") && order.deliveredVoucher) { voucherBoxHTML = `<div class="voucher-delivery-box"><span class="voucher-code-text" id="code-${orderId}">${order.deliveredVoucher}</span><button class="copy-btn" onclick="copyVoucherCode('${orderId}')"><i class="fa-solid fa-copy"></i> Copy</button></div>`; } let targetDisplay = `<b>Target UID:</b> ${order.playerId}`; if (order.loginData) { targetDisplay = `<b>Login:</b> ${order.loginData.accountLogin} | <b>WP:</b> ${order.loginData.whatsapp}`; } else if (order.playerId === "VOUCHER_ORDER") { targetDisplay = `<b>Type:</b> Direct Code Delivery`; } let cardHTML = `<div class="order-card"><div class="order-card-header"><span>ID: <b>${order.orderId}</b></span><span class="status-badge ${badgeColor}">${order.status}</span></div><div style="font-size: 13px; line-height: 1.5;"><p><b>Pack:</b> ${order.packageName}</p><p>${targetDisplay}</p><p><b>Paid Amount:</b> ${order.price} Tk</p></div>${voucherBoxHTML}</div>`; container.innerHTML += cardHTML; }); }); }
+        function copyVoucherCode(orderId) { let codeText = document.getElementById("code-" + orderId).innerText; navigator.clipboard.writeText(codeText); alert("ভাউচার কোডটি কপি করা হয়েছে: " + codeText); }
+        function submitDepositRequest() { let method = document.getElementById("deposit-method").value; let amount = parseInt(document.getElementById("deposit-amount").value); let txnId = document.getElementById("deposit-txnid").value.trim(); if (!amount || amount < 10) { alert("সর্বনিম্ন ১০ টাকা ডিপোজিট করতে পারবি!"); return; } if (!txnId) { alert("TxnID বক্সে লিখে সাবমিট কর!"); return; } let newReqId = "REQ" + Math.floor(100000 + Math.random() * 900000); let depositData = { requestId: newReqId, userName: currentUserName, userEmail: loggedInUserEmail, method: method, amount: amount, txnId: txnId, status: "pending" }; database.ref("addMoneyRequests/" + newReqId).set(depositData, function(error) { if (!error) { alert("রিকোয়েস্ট পাঠানো হয়েছে! অ্যাডমিন ভেরিফাই করে অ্যাপ্রুভ করলেই ব্যালেন্স পেয়ে যাবি।"); document.getElementById("deposit-amount").value = ""; document.getElementById("deposit-txnid").value = ""; } }); }
+        function switchUserTab(sectionId, element) { document.querySelectorAll('.app-section').forEach(sec => sec.classList.remove('active')); document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active')); document.getElementById(sectionId).classList.add('active'); if (element) element.classList.add('active'); backToHomeHome(); }
+        function backToHomeHome() { document.getElementById("checkout-form-view").style.display = "none"; document.getElementById("inner-package-view").style.display = "none"; document.getElementById("main-categories").style.display = "flex"; currentAppState = "home"; }
     </script>
 </body>
-
 </html>
