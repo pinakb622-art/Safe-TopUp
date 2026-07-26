@@ -1,3 +1,5 @@
+--- START OF FILE Paste July 26, 2026 - 10:20PM ---
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -240,23 +242,46 @@
         </main>
 
         <!-- Gateway View -->
-        <div id="gateway-view" class="fixed inset-0 bg-black/60 z-[2000] hidden items-end sm:items-center justify-center p-0 backdrop-blur-sm">
-            <div class="bg-white w-full max-w-md rounded-t-[2.5rem] p-6 space-y-6">
+        <div id="gateway-view" class="fixed inset-0 bg-black/60 z-[2000] hidden items-end sm:items-center justify-center p-0 backdrop-blur-sm overflow-y-auto">
+            <div class="bg-slate-50 w-full max-w-md rounded-t-[2.5rem] p-6 space-y-4 min-h-[80vh]">
                 <div class="flex justify-between items-center"><h3 class="font-bold text-slate-800">Secure Payment</h3><button class="tap-effect" onclick="closeGateway()"><i class="fa-solid fa-xmark text-slate-400 text-xl"></i></button></div>
+                
                 <div id="gw-step-selection" class="grid grid-cols-2 gap-4">
-                    <div class="bg-slate-50 border p-4 rounded-2xl text-center tap-effect" onclick="showPayInstr('bkash')"><img class="h-10 mx-auto" src="https://i.ibb.co/9vM70r7/bkash.png"><b>bKash</b></div>
-                    <div class="bg-slate-50 border p-4 rounded-2xl text-center tap-effect" onclick="showPayInstr('nagad')"><img class="h-10 mx-auto" src="https://i.ibb.co/S6DR7sd/nagad.png"><b>Nagad</b></div>
-                    <div class="bg-slate-50 border p-4 rounded-2xl text-center tap-effect col-span-2 flex items-center justify-center gap-2" onclick="handleExtraPayment('bank')"><i class="fa-solid fa-building-columns text-blue-600"></i><b>Bank Transfer</b></div>
+                    <div class="bg-white border p-4 rounded-2xl text-center tap-effect shadow-sm" onclick="showPayInstr('bkash')"><img class="h-10 mx-auto" src="https://i.ibb.co/9vM70r7/bkash.png"><b>bKash</b></div>
+                    <div class="bg-white border p-4 rounded-2xl text-center tap-effect shadow-sm" onclick="showPayInstr('nagad')"><img class="h-10 mx-auto" src="https://i.ibb.co/S6DR7sd/nagad.png"><b>Nagad</b></div>
+                    <div class="bg-white border p-4 rounded-2xl text-center tap-effect col-span-2 flex items-center justify-center gap-2 shadow-sm" onclick="handleExtraPayment('bank')"><i class="fa-solid fa-building-columns text-blue-600"></i><b>Bank Transfer</b></div>
                 </div>
-                <div id="gw-step-instr" class="hidden space-y-6">
-                    <div id="instr-color-box" class="p-6 rounded-3xl text-white text-center shadow-xl">
-                        <p class="text-3xl font-extrabold tracking-tighter">৳ <span class="dep-amt-val">0</span></p>
-                        <p class="text-xs font-bold mt-4 opacity-90">SEND MONEY: <span class="select-all font-mono font-bold">01909699608</span></p>
-                        <button class="bg-white/20 px-3 py-1 rounded-md text-[10px] mt-2 border tap-effect" onclick="copyNum('01909699608')">COPY NUMBER</button>
+
+                <div id="gw-step-instr" class="hidden space-y-4">
+                    <div class="text-center space-y-4">
+                        <img id="gw-method-logo" class="h-12 mx-auto" src="">
+                        <div class="flex items-center justify-center gap-2 bg-white py-2 px-4 rounded-xl shadow-sm border w-fit mx-auto">
+                            <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center"><i class="fa-solid fa-user-tie text-white text-xs"></i></div>
+                            <span class="text-sm font-bold text-slate-600 tracking-tight uppercase">Safe Topup X</span>
+                        </div>
+                        <div class="text-3xl font-black text-slate-700">৳ <span class="dep-amt-val">0</span></div>
                     </div>
-                    <input type="text" id="trx-id" class="w-full border-2 border-slate-100 p-4 rounded-2xl text-center font-bold outline-none" placeholder="Enter Transaction ID">
-                    <button class="w-full bg-brand-dark text-white font-bold p-4 rounded-2xl shadow-xl tap-effect uppercase tracking-widest" onclick="submitDeposit()">Verify Payment</button>
+
+                    <div id="instr-color-box" class="p-6 rounded-[2rem] text-white space-y-4 shadow-xl">
+                        <div class="text-center font-bold text-sm">ট্রানজেকশন আইডি দিন</div>
+                        <input type="text" id="trx-id" class="w-full bg-white text-slate-800 p-4 rounded-2xl text-center font-bold outline-none border-none placeholder:text-slate-300" placeholder="ট্রানজেকশন আইডি দিন">
+                        
+                        <div class="text-[11px] space-y-2.5 font-medium opacity-95">
+                            <p>• <span id="ussd-code">*247#</span> ডায়াল করে আপনার <span class="gw-name-bn">bKash</span> মোবাইল মেনুতে যান অথবা <span class="gw-name-bn">bKash</span> অ্যাপে যান।</p>
+                            <p>• <span class="font-bold">"Send Money"</span>-এ ক্লিক করুন।</p>
+                            <p class="flex items-center gap-1">
+                                • প্রাপক নম্বর হিসেবে এই নম্বরটি লিখুনঃ <span class="font-bold">01909699608</span> 
+                                <button onclick="copyNum('01909699608')" class="bg-black/20 px-2 py-0.5 rounded flex items-center gap-1 text-[9px]"><i class="fa-regular fa-copy"></i> Copy</button>
+                            </p>
+                            <p>• টাকার পরিমাণঃ <span class="dep-amt-val">0</span></p>
+                            <p>• নিশ্চিত করতে এখন আপনার <span class="gw-name-bn">bKash</span> মোবাইল মেনু পিন লিখুন।</p>
+                            <p>• সবকিছু ঠিক থাকলে, আপনি <span class="gw-name-bn">bKash</span> থেকে একটি নিশ্চিতকরণ বার্তা পাবেন।</p>
+                            <p>• এখন উপরের বক্সে আপনার <span class="font-bold">Transaction ID</span> দিন এবং নিচের <span class="font-bold uppercase">Verify</span> বাটনে ক্লিক করুন।</p>
+                        </div>
+                    </div>
+                    <button class="w-full bg-slate-900 text-white font-bold p-4 rounded-2xl shadow-xl tap-effect uppercase tracking-widest" onclick="submitDeposit()">VERIFY</button>
                 </div>
+
                 <div id="gw-step-extra" class="hidden space-y-4"><div id="extra-pay-info" class="bg-slate-50 border p-4 rounded-xl text-xs whitespace-pre-line leading-relaxed"></div></div>
             </div>
         </div>
@@ -474,22 +499,19 @@
             });
         }
 
-        // --- GLOBAL ORDERS FIX ---
+        // --- GLOBAL ORDERS FIXED VERSION ---
         function loadLatestTenOrders() {
-            db.ref('orders').limitToLast(10).on('value', snap => {
+            db.ref('orders').orderByChild('timestamp').limitToLast(10).on('value', snap => {
                 const container = document.getElementById('dashboard-latest-orders');
                 if(!container) return;
+                let orders = []; 
+                snap.forEach(c => { orders.push(c.val()); });
+                orders.reverse();
                 container.innerHTML = "";
-                
-                if (!snap.exists()) {
+                if (orders.length === 0) {
                     container.innerHTML = "<p class='text-center text-[10px] py-4 text-slate-400 uppercase font-bold tracking-widest'>অপেক্ষা করুন...</p>";
                     return;
                 }
-
-                let orders = []; 
-                snap.forEach(c => { orders.push(c.val()); });
-                orders.reverse(); // সর্বশেষ আগে
-
                 orders.forEach(o => {
                     const u = o.userEmail ? o.userEmail.split('@')[0].toUpperCase() : "USER";
                     container.innerHTML += `
@@ -515,6 +537,9 @@
             if(amt < 10) return showAlert("Alert", "Minimum 10 TK Required");
             document.querySelectorAll('.dep-amt-val').forEach(el => el.innerText = amt);
             document.getElementById('gateway-view').classList.replace('hidden', 'flex');
+            document.getElementById('gw-step-selection').classList.remove('hidden');
+            document.getElementById('gw-step-instr').classList.add('hidden');
+            document.getElementById('gw-step-extra').classList.add('hidden');
         }
 
         function closeGateway() { document.getElementById('gateway-view').classList.replace('flex', 'hidden'); }
@@ -522,7 +547,23 @@
         function showPayInstr(m) {
             document.getElementById('gw-step-selection').classList.add('hidden');
             document.getElementById('gw-step-instr').classList.remove('hidden');
-            document.getElementById('instr-color-box').style.background = m === 'bkash' ? 'linear-gradient(to right, #d12053, #ff4757)' : 'linear-gradient(to right, #f7941d, #ffa502)';
+            
+            const logo = document.getElementById('gw-method-logo');
+            const box = document.getElementById('instr-color-box');
+            const ussd = document.getElementById('ussd-code');
+            const bnNames = document.querySelectorAll('.gw-name-bn');
+
+            if(m === 'bkash') {
+                logo.src = "https://i.ibb.co/9vM70r7/bkash.png";
+                box.style.backgroundColor = "#d12053";
+                ussd.innerText = "*247#";
+                bnNames.forEach(el => el.innerText = "bKash");
+            } else if(m === 'nagad') {
+                logo.src = "https://i.ibb.co/S6DR7sd/nagad.png";
+                box.style.backgroundColor = "#ed1c24";
+                ussd.innerText = "*167#";
+                bnNames.forEach(el => el.innerText = "Nagad");
+            }
         }
 
         function copyNum(n) { navigator.clipboard.writeText(n).then(() => showAlert("Success", "Copied!")); }
