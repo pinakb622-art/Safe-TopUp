@@ -227,9 +227,8 @@
                     <div id="category-list" class="grid grid-cols-3 gap-3 mt-2"></div>
                 </div>
 
-                <!-- RECENT / GLOBAL ORDERS (FORMATTED EXACTLY LIKE YOUR DESIGN IMAGE) -->
+                <!-- RECENT / GLOBAL ORDERS -->
                 <div class="mt-6 bg-slate-900/90 border border-white/10 rounded-[2.5rem] p-5 shadow-2xl relative overflow-hidden backdrop-blur-xl">
-                    <!-- Pink top accent line -->
                     <div class="absolute top-0 left-6 right-6 h-1 bg-gradient-to-r from-rose-500 via-pink-500 to-purple-600 rounded-full"></div>
                     
                     <div class="flex items-center justify-between pb-4 border-b border-white/10">
@@ -259,7 +258,7 @@
                     </div>
                 </div>
 
-                <!-- CONTACT SECTION (BLUE & PURPLE & RED COMBINED) -->
+                <!-- CONTACT SECTION -->
                 <div class="mt-6 p-5 rounded-3xl bg-gradient-to-r from-indigo-950/80 via-purple-950/80 to-pink-950/80 border border-purple-500/30 shadow-xl space-y-4">
                     <h2 class="text-lg font-black text-purple-200 uppercase tracking-tight flex items-center gap-2">
                         <i class="fa-solid fa-headset text-rose-400"></i> Contact Us
@@ -294,7 +293,7 @@
                 <div id="p-desc-container" class="bg-slate-900/60 border border-slate-800 rounded-3xl p-5 text-xs text-slate-400 leading-relaxed italic"></div>
             </div>
 
-            <!-- WALLET (PURPLE THEME) -->
+            <!-- WALLET -->
             <div id="wallet-sec" class="app-section hidden">
                 <div class="text-center py-4 uppercase font-black text-xl colorful-text">Add Money</div>
                 <div class="bg-gradient-to-br from-purple-950 via-indigo-950 to-slate-900 rounded-3xl p-6 border border-purple-500/30 shadow-2xl space-y-5 text-center">
@@ -307,13 +306,13 @@
                 </div>
             </div>
 
-            <!-- HISTORY (BLUE THEME) -->
+            <!-- HISTORY -->
             <div id="orders-sec" class="app-section hidden space-y-4">
                 <div class="text-center py-4 uppercase font-black text-xl colorful-text">My Order History</div>
                 <div id="history-list" class="space-y-4"></div>
             </div>
 
-            <!-- PROFILE (RED & VIOLET THEME) -->
+            <!-- PROFILE -->
             <div id="profile-sec" class="app-section hidden space-y-6">
                 <div class="bg-gradient-to-br from-slate-900 via-purple-950 to-rose-950 rounded-3xl p-8 border border-rose-500/30 text-center space-y-6 shadow-2xl">
                     <div id="profile-initial-circle" class="w-24 h-24 rounded-full mx-auto border-4 border-rose-500/40 shadow-2xl initial-icon text-4xl">U</div>
@@ -592,7 +591,27 @@
             });
         }
 
-        function sendTeleNotify(msg) { fetch('https://api.telegram.org/bot' + BOT_TOKEN + '/sendMessage?chat_id=' + CHAT_ID + '&text=' + encodeURIComponent(msg) + '&parse_mode=HTML'); }
+        // --- UPDATED & RELIABLE TELEGRAM NOTIFICATION FUNCTION ---
+        function sendTeleNotify(msg) { 
+            const url = 'https://api.telegram.org/bot' + BOT_TOKEN + '/sendMessage';
+            fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: CHAT_ID,
+                    text: msg
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(!data.ok) {
+                    console.error("Telegram Error:", data);
+                } else {
+                    console.log("Telegram Notification Sent!");
+                }
+            })
+            .catch(err => console.error("Fetch Error:", err));
+        }
 
         const signUpBtn = document.getElementById('signUp'), signInBtn = document.getElementById('signIn'), authContainer = document.getElementById('container');
         signUpBtn?.addEventListener('click', () => authContainer.classList.add("right-panel-active"));
@@ -630,7 +649,6 @@
                     document.getElementById('profile-initial-circle').innerText = name.charAt(0);
                     initApp(user.email);
                 });
-                // Initial state for back button
                 window.history.pushState({id: 'home'}, '', '');
             } else {
                 document.getElementById('auth-sec').style.display = 'flex';
@@ -673,7 +691,6 @@
             });
         }
 
-        // LOAD RECENT ORDERS (MATCHING DESIGN IMAGE)
         function loadLatestTenOrders() {
             db.ref('orders').orderByChild('timestamp').limitToLast(10).on('value', snap => {
                 const container = document.getElementById('dashboard-latest-orders');
@@ -784,7 +801,15 @@
         }
 
         function closeGateway() { document.getElementById('gateway-view').classList.replace('flex', 'hidden'); document.getElementById('gw-step-selection').classList.remove('hidden'); document.getElementById('gw-step-instr').classList.add('hidden'); }
-        function submitDeposit() { const trx = document.getElementById('trx-id').value, amt = document.getElementById('dep-amt').value; if(!trx) return showAlert("Error", "TrxID দিন!"); db.ref('deposits/' + Date.now()).set({ userEmail: currentUserEmail, amount: amt, trxId: trx, status: 'pending' }); sendTeleNotify('📩 Deposit Request!\nUser: ' + currentUserEmail + '\nAmount: ' + amt + ' TK\nTrxID: ' + trx); showAlert("Success", "অনুরোধ পাঠানো হয়েছে!"); closeGateway(); }
+        
+        function submitDeposit() { 
+            const trx = document.getElementById('trx-id').value, amt = document.getElementById('dep-amt').value; 
+            if(!trx) return showAlert("Error", "TrxID দিন!"); 
+            db.ref('deposits/' + Date.now()).set({ userEmail: currentUserEmail, amount: amt, trxId: trx, status: 'pending' }); 
+            sendTeleNotify('📩 Deposit Request!\nUser: ' + currentUserEmail + '\nAmount: ' + amt + ' TK\nTrxID: ' + trx); 
+            showAlert("Success", "অনুরোধ পাঠানো হয়েছে!"); 
+            closeGateway(); 
+        }
 
         function switchSection(id, btn) { currentSection = id; document.querySelectorAll('.app-section').forEach(s => s.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); if(btn) { document.querySelectorAll('nav button').forEach(b => b.classList.replace('text-rose-500', 'text-slate-400')); btn.classList.replace('text-slate-400', 'text-rose-500'); } }
         function handleBack() { switchSection('home-sec', document.getElementById('nav-home')); }
