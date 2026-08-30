@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Safe Topup X - Secure Dashboard</title>
     <!-- FontAwesome for Icons -->
@@ -52,38 +52,27 @@
         .popup-card { background: #0f172a; transform: scale(0.9); opacity: 0; transition: 0.3s; box-shadow: 0 25px 50px -12px rgba(124, 58, 237, 0.25); border: 1px solid rgba(255, 255, 255, 0.1); }
         #custom-popup.show .popup-card { transform: scale(1); opacity: 1; }
 
-        /* --- ANIMATED LOGIN UI --- */
+        /* --- SIMPLIFIED AUTH UI --- */
         #auth-sec {
-            position: fixed; inset: 0; z-index: 9999; display: flex; justify-content: center; align-items: center; min-height: 100vh;
+            position: fixed; inset: 0; z-index: 20000; display: none; justify-content: center; align-items: center; min-height: 100vh;
             background: linear-gradient(135deg, #090d16, #1e1b4b, #31102f);
-            background-size: 400% 400%; animation: gradientBG 15s ease infinite; overflow-y: auto;
+            background-size: 400% 400%; animation: gradientBG 15s ease infinite; overflow-y: auto; padding: 20px;
         }
         @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
-        .auth-container { position: relative; width: 850px; height: 540px; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 24px; box-shadow: 0 25px 45px rgba(0, 0, 0, 0.5); overflow: hidden; }
-        .form-container { position: absolute; top: 0; width: 50%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 30px 40px; transition: 0.6s ease-in-out; }
-        .sign-in-container { left: 0; z-index: 2; }
-        .sign-up-container { left: 0; opacity: 0; z-index: 1; }
-        .auth-container.right-panel-active .sign-in-container { transform: translateX(100%); opacity: 0; }
-        .auth-container.right-panel-active .sign-up-container { transform: translateX(100%); opacity: 1; z-index: 5; animation: show 0.6s; }
-        @keyframes show { 0%, 49.99% { opacity: 0; z-index: 1; } 50%, 100% { opacity: 1; z-index: 5; } }
-        .input-box { position: relative; width: 100%; margin: 8px 0; }
-        .input-box input { width: 100%; padding: 12px 16px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15); outline: none; border-radius: 14px; color: #fff; font-size: 14px; }
-        .input-box input:focus { border-color: #a855f7; box-shadow: 0 0 10px rgba(168, 85, 247, 0.3); }
-        .auth-btn { width: 100%; padding: 12px; margin-top: 12px; background: linear-gradient(135deg, #2563eb, #7c3aed, #ff4757); border: none; border-radius: 14px; color: #fff; font-size: 15px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .overlay-container { position: absolute; top: 0; left: 50%; width: 50%; height: 100%; overflow: hidden; transition: transform 0.6s ease-in-out; z-index: 100; }
-        .auth-container.right-panel-active .overlay-container { transform: translateX(-100%); }
-        .overlay { position: relative; left: -100%; height: 100%; width: 200%; background: linear-gradient(to right, #ff4757, #7c3aed, #2563eb); color: #fff; transform: translateX(0); transition: transform 0.6s ease-in-out; }
-        .auth-container.right-panel-active .overlay { transform: translateX(50%); }
-        .overlay-panel { position: absolute; display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 0 40px; text-align: center; top: 0; height: 100%; width: 50%; transition: 0.6s ease-in-out; }
-        .ghost-btn { background: rgba(255,255,255,0.1); border: 2px solid #fff; color: #fff; padding: 10px 30px; border-radius: 12px; font-weight: bold; cursor: pointer; backdrop-filter: blur(5px); }
-
-        @media (max-width: 640px) {
-            .auth-container { width: 95%; height: auto; padding: 20px 0; }
-            .overlay-container { display: none; }
-            .form-container { position: relative; width: 100%; opacity: 1 !important; transform: none !important; }
-            .auth-container.right-panel-active .sign-in-container { display: none; }
+        .auth-card { 
+            width: 100%; max-width: 400px; background: rgba(15, 23, 42, 0.8); 
+            backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.12); 
+            border-radius: 30px; box-shadow: 0 25px 45px rgba(0, 0, 0, 0.5); 
+            padding: 40px 30px; position: relative; 
         }
+        
+        .input-box { position: relative; width: 100%; margin: 12px 0; }
+        .input-box input { width: 100%; padding: 14px 18px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); outline: none; border-radius: 16px; color: #fff; font-size: 14px; transition: 0.3s; }
+        .input-box input:focus { border-color: #7c3aed; background: rgba(255, 255, 255, 0.08); }
+        
+        .auth-btn { width: 100%; padding: 14px; margin-top: 15px; background: linear-gradient(135deg, #2563eb, #7c3aed); border: none; border-radius: 16px; color: #fff; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; }
+        .auth-btn:active { transform: scale(0.98); }
 
         /* --- DASHBOARD STYLES --- */
         .colorful-text { background: linear-gradient(90deg, #ff4757, #a855f7, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; }
@@ -142,55 +131,54 @@
 
     <!-- AUTH INTERFACE -->
     <div id="auth-sec">
-        <div class="auth-container" id="container">
-            <div class="form-container sign-up-container">
+        <button onclick="closeAuthUI()" class="absolute top-6 right-6 text-white/50 hover:text-white text-3xl z-[20100] transition-all"><i class="fa-solid fa-circle-xmark"></i></button>
+        
+        <div class="auth-card">
+            <!-- Login Form -->
+            <div id="login-form-box">
+                <h2 class="text-white text-3xl font-black mb-2 uppercase tracking-tighter">Login</h2>
+                <p class="text-slate-400 text-xs mb-6 font-medium">আপনার একাউন্টে লগইন করুন</p>
+                <form onsubmit="event.preventDefault(); login();">
+                    <div class="input-box"><input type="email" id="login-email" placeholder="Email Address" required></div>
+                    <div class="input-box"><input type="password" id="login-pass" placeholder="Password" required></div>
+                    <button class="auth-btn shadow-lg shadow-blue-900/40">Login Now</button>
+                </form>
+                <div class="mt-8 pt-6 border-t border-white/5 text-center">
+                    <p class="text-slate-500 text-[10px] uppercase font-bold tracking-widest mb-2">New to Safe Topup X?</p>
+                    <button onclick="toggleAuthForm('reg')" class="text-purple-400 text-lg font-black uppercase tracking-tight hover:text-purple-300 transition-all">Create New Account</button>
+                </div>
+            </div>
+
+            <!-- Register Form (Hidden by default) -->
+            <div id="reg-form-box" class="hidden">
+                <h2 class="text-white text-3xl font-black mb-2 uppercase tracking-tighter">Register</h2>
+                <p class="text-slate-400 text-xs mb-6 font-medium">নতুন একাউন্ট তৈরি করুন</p>
                 <form onsubmit="event.preventDefault(); register();">
-                    <h2 class="text-white text-2xl font-bold mb-4 uppercase">Register</h2>
                     <div class="input-box"><input type="email" id="reg-email" placeholder="Email Address" required></div>
                     <div class="input-box"><input type="tel" id="reg-phone" placeholder="Phone Number" required></div>
                     <div class="input-box"><input type="password" id="reg-pass" placeholder="Create Password" required></div>
-                    <button class="auth-btn uppercase tracking-widest shadow-lg shadow-purple-900/50">Register</button>
-                    <p class="sm:hidden text-purple-300 text-[10px] mt-4 font-semibold cursor-pointer" onclick="container.classList.remove('right-panel-active')">Have account? Login</p>
+                    <button class="auth-btn shadow-lg shadow-purple-900/40">Create Account</button>
                 </form>
-            </div>
-            <div class="form-container sign-in-container">
-                <form onsubmit="event.preventDefault(); login();">
-                    <h2 class="text-white text-2xl font-bold mb-4 uppercase">Login</h2>
-                    <div class="input-box"><input type="email" id="login-email" placeholder="Email" required></div>
-                    <div class="input-box"><input type="password" id="login-pass" placeholder="Password" required></div>
-                    <button class="auth-btn uppercase tracking-widest shadow-lg shadow-blue-900/50">Login</button>
-                    <p class="sm:hidden text-blue-300 text-[10px] mt-4 font-semibold cursor-pointer" onclick="container.classList.add('right-panel-active')">New? Register</p>
-                </form>
-            </div>
-            <div class="overlay-container">
-                <div class="overlay">
-                    <div class="overlay-panel overlay-left">
-                        <h3 class="text-2xl font-bold uppercase tracking-tight">Welcome Back!</h3>
-                        <p class="text-sm my-4">আপনার পূর্বের একাউন্ট থাকলে সরাসরি লগইন করুন</p>
-                        <button class="ghost-btn" id="signIn">লগইন</button>
-                    </div>
-                    <div class="overlay-panel overlay-right">
-                        <h3 class="text-2xl font-bold uppercase tracking-tight">Hello, Friend!</h3>
-                        <p class="text-sm my-4">আমাদের সাথে যুক্ত হতে দ্রুত রেজিস্ট্রেশন সম্পন্ন করুন</p>
-                        <button class="ghost-btn" id="signUp">রেজিস্ট্রার</button>
-                    </div>
+                <div class="mt-8 pt-6 border-t border-white/5 text-center">
+                    <p class="text-slate-500 text-[10px] uppercase font-bold tracking-widest mb-2">Already have an account?</p>
+                    <button onclick="toggleAuthForm('login')" class="text-blue-400 text-lg font-black uppercase tracking-tight hover:text-blue-300 transition-all">Login Account</button>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- MAIN UI -->
-    <div id="main-ui" class="hidden">
+    <div id="main-ui">
         <header class="gradient-header text-white p-6 rounded-b-[2.5rem] shadow-2xl relative overflow-hidden border-b border-white/10">
             <div class="max-w-xl mx-auto flex justify-between items-center relative z-10">
                 <div class="flex items-center gap-3">
-                    <div id="user-initial-circle" class="w-12 h-12 rounded-full border-2 border-white/40 tap-effect initial-icon text-xl shadow-lg cursor-pointer" onclick="switchSection('profile-sec', document.getElementById('nav-profile'))">U</div>
+                    <div id="user-initial-circle" class="w-12 h-12 rounded-full border-2 border-white/40 tap-effect initial-icon text-xl shadow-lg cursor-pointer" onclick="switchSection('profile-sec', document.getElementById('nav-profile'))">G</div>
                     <div onclick="switchSection('profile-sec', document.getElementById('nav-profile'))">
-                        <h2 id="user-name" class="font-bold text-xl cursor-pointer text-white drop-shadow">User</h2>
+                        <h2 id="user-name" class="font-bold text-xl cursor-pointer text-white drop-shadow">Guest</h2>
                         <div class="bg-black/30 backdrop-blur-md border border-white/10 px-3 py-0.5 rounded-full text-[11px] font-bold text-blue-200">Balance: <span id="user-balance" class="text-emerald-400 font-extrabold">0</span> TK</div>
                     </div>
                 </div>
-                <button onclick="auth.signOut()" class="w-10 h-10 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl flex items-center justify-center text-white tap-effect hover:bg-rose-600/50 transition-all"><i class="fa-solid fa-power-off"></i></button>
+                <button onclick="handleLogout()" id="header-logout-btn" class="w-10 h-10 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl flex items-center justify-center text-white tap-effect hover:bg-rose-600/50 transition-all"><i class="fa-solid fa-power-off"></i></button>
             </div>
         </header>
 
@@ -203,7 +191,7 @@
                     <div id="slider-indicators" class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5"></div>
                 </div>
 
-                <!-- SPECIAL OFFERS (RED THEME) -->
+                <!-- SPECIAL OFFERS -->
                 <div id="special-topup-container" class="hidden space-y-4 bg-gradient-to-br from-red-950/60 via-rose-950/40 to-slate-900 border border-red-500/30 p-4 rounded-3xl shadow-xl shadow-red-950/30">
                     <h2 class="text-lg font-black text-rose-400 uppercase tracking-tight flex items-center gap-2">
                         <i class="fa-solid fa-fire text-amber-500 animate-bounce"></i> Special Offers 🔥
@@ -211,7 +199,7 @@
                     <div id="special-list" class="grid grid-cols-3 gap-3"></div>
                 </div>
 
-                <!-- PINNED OFFERS (BLUE THEME) -->
+                <!-- PINNED OFFERS -->
                 <div id="pinned-category-container" class="hidden space-y-4 bg-gradient-to-br from-blue-950/60 via-sky-950/40 to-slate-900 border border-blue-500/30 p-4 rounded-3xl shadow-xl shadow-blue-950/30">
                     <h2 class="text-lg font-black text-blue-400 uppercase tracking-tight flex items-center gap-2">
                         <i class="fa-solid fa-thumbtack -rotate-45 text-sky-400"></i> Pinned Offers
@@ -219,7 +207,7 @@
                     <div id="pinned-list" class="grid grid-cols-3 gap-3"></div>
                 </div>
 
-                <!-- DIRECT TOP UP (PURPLE THEME) -->
+                <!-- DIRECT TOP UP -->
                 <div class="space-y-4 bg-gradient-to-br from-purple-950/60 via-indigo-950/40 to-slate-900 border border-purple-500/30 p-5 rounded-3xl shadow-xl shadow-purple-950/30">
                     <h2 class="text-lg font-black text-purple-300 uppercase tracking-tight flex items-center gap-2">
                         <i class="fa-solid fa-gamepad text-purple-400"></i> Direct Top Up
@@ -314,7 +302,11 @@
 
             <!-- PROFILE -->
             <div id="profile-sec" class="app-section hidden space-y-6">
-                <div class="bg-gradient-to-br from-slate-900 via-purple-950 to-rose-950 rounded-3xl p-8 border border-rose-500/30 text-center space-y-6 shadow-2xl">
+                <div id="guest-profile-msg" class="bg-slate-900/80 p-10 rounded-3xl text-center border border-white/5">
+                    <p class="text-slate-400 font-bold mb-4 uppercase text-xs tracking-widest">Login required to view profile</p>
+                    <button onclick="openAuthUI()" class="bg-brand-blue px-8 py-3 rounded-2xl font-black uppercase text-sm">Login Now</button>
+                </div>
+                <div id="real-profile-sec" class="hidden bg-gradient-to-br from-slate-900 via-purple-950 to-rose-950 rounded-3xl p-8 border border-rose-500/30 text-center space-y-6 shadow-2xl">
                     <div id="profile-initial-circle" class="w-24 h-24 rounded-full mx-auto border-4 border-rose-500/40 shadow-2xl initial-icon text-4xl">U</div>
                     <div>
                         <h3 id="profile-user-display" class="font-bold text-xl text-white uppercase tracking-wider">User</h3>
@@ -593,29 +585,23 @@
 
         // --- TELEGRAM NOTIFICATION FUNCTION ---
         function sendTeleNotify(msg) { 
-            const url = 'https://api.telegram.org/bot' + BOT_TOKEN + '/sendMessage';
-            fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    chat_id: CHAT_ID,
-                    text: msg
-                })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if(!data.ok) {
-                    console.error("Telegram Error:", data);
-                } else {
-                    console.log("Telegram Notification Sent!");
-                }
-            })
-            .catch(err => console.error("Fetch Error:", err));
+            const url = 'https://api.telegram.org/bot' + BOT_TOKEN + '/sendMessage?chat_id=' + CHAT_ID + '&text=' + encodeURIComponent(msg);
+            fetch(url).then(res => res.json()).then(data => { if(!data.ok) console.error("Telegram Error:", data); }).catch(err => console.error("Fetch Error:", err));
         }
 
-        const signUpBtn = document.getElementById('signUp'), signInBtn = document.getElementById('signIn'), authContainer = document.getElementById('container');
-        signUpBtn?.addEventListener('click', () => authContainer.classList.add("right-panel-active"));
-        signInBtn?.addEventListener('click', () => authContainer.classList.remove("right-panel-active"));
+        // --- AUTH UI TOGGLE ---
+        function openAuthUI() { document.getElementById('auth-sec').style.display = 'flex'; }
+        function closeAuthUI() { document.getElementById('auth-sec').style.display = 'none'; }
+        function toggleAuthForm(type) {
+            if(type === 'reg') {
+                document.getElementById('login-form-box').classList.add('hidden');
+                document.getElementById('reg-form-box').classList.remove('hidden');
+            } else {
+                document.getElementById('reg-form-box').classList.add('hidden');
+                document.getElementById('login-form-box').classList.remove('hidden');
+            }
+        }
+        function handleLogout() { if(auth.currentUser) auth.signOut(); else openAuthUI(); }
 
         let userBal = 0, selPkg = null, selectedProductData = null, sliderList = [], sliderIdx = 0, currentSection = 'home-sec', currentUserEmail = "";
 
@@ -628,13 +614,20 @@
         };
 
         auth.onAuthStateChanged(user => {
+            const logoutBtn = document.getElementById('header-logout-btn');
+            const gProfile = document.getElementById('guest-profile-msg');
+            const uProfile = document.getElementById('real-profile-sec');
+
             if (user) {
                 currentUserEmail = user.email;
+                closeAuthUI();
+                logoutBtn.classList.remove('hidden');
+                gProfile.classList.add('hidden');
+                uProfile.classList.remove('hidden');
+
                 const emailKey = user.email.replace(/\./g, ',');
                 db.ref('users/' + emailKey).on('value', snap => {
                     const d = snap.val();
-                    document.getElementById('auth-sec').style.display = 'none';
-                    document.getElementById('main-ui').classList.remove('hidden');
                     if (!d || !d.phone) document.getElementById('phone-warning').classList.remove('hidden');
                     else document.getElementById('phone-warning').classList.add('hidden');
 
@@ -649,11 +642,16 @@
                     document.getElementById('profile-initial-circle').innerText = name.charAt(0);
                     initApp(user.email);
                 });
-                window.history.pushState({id: 'home'}, '', '');
             } else {
-                document.getElementById('auth-sec').style.display = 'flex';
-                document.getElementById('main-ui').classList.add('hidden');
-                document.getElementById('phone-warning').classList.add('hidden');
+                currentUserEmail = "";
+                logoutBtn.classList.add('hidden');
+                gProfile.classList.remove('hidden');
+                uProfile.classList.add('hidden');
+                document.getElementById('user-name').innerText = "Guest";
+                document.getElementById('user-initial-circle').innerText = "G";
+                document.getElementById('user-balance').innerText = "0";
+                document.querySelectorAll('.user-bal-val').forEach(el => el.innerText = "0");
+                initApp("");
             }
         });
 
@@ -661,7 +659,7 @@
         function register() { const e = document.getElementById('reg-email').value; const ph = document.getElementById('reg-phone').value; const p = document.getElementById('reg-pass').value; if (ph.length < 10) return showAlert("Error", "সঠিক ফোন নাম্বার দিন!"); auth.createUserWithEmailAndPassword(e, p).then(r => db.ref('users/' + e.replace(/\./g, ',')).set({ email: e, phone: ph, balance: 0 })).catch(err => showAlert("Error", err.message)); }
         function submitVerifyFromTop() { const ph = document.getElementById('top-v-phone').value; if (ph.length < 10) return showAlert("Error", "সঠিক নাম্বার দিন!"); db.ref('users/' + currentUserEmail.replace(/\./g, ',')).update({ phone: ph }).then(() => showAlert("Success", "নম্বর ভেরিফাই হয়েছে!")); }
 
-        function initApp(email) { loadSlider(); loadCategories(); loadLatestTenOrders(); loadHistory(email); loadContactLinks(); loadPaymentSettings(); }
+        function initApp(email) { loadSlider(); loadCategories(); loadLatestTenOrders(); if(email) loadHistory(email); loadContactLinks(); loadPaymentSettings(); }
 
         function loadSlider() {
             db.ref('settings/sliders').on('value', snap => {
@@ -778,6 +776,7 @@
         }
 
         function triggerConfirm() { 
+            if(!auth.currentUser) return openAuthUI(); 
             if(!selPkg) return showAlert("Alert", "Package সিলেক্ট করুন!"); 
             if(userBal < selPkg.price) return showAlert("Error", "পর্যাপ্ত ব্যালেন্স নেই!"); 
             showConfirm("Confirm Order?", `${selPkg.name} - ৳${selPkg.price}`, placeOrder); 
@@ -785,7 +784,7 @@
         
         function placeOrder() {
             const currentUser = auth.currentUser;
-            if(!currentUser) return showAlert("Error", "লগইন করুন!");
+            if(!currentUser) return openAuthUI();
             const email = currentUser.email, oId = "ORD" + Date.now().toString().slice(-6);
             
             let info = document.getElementById('i-uid')?.value || document.getElementById('i-email')?.value || "Voucher Order";
@@ -828,6 +827,7 @@
         }
 
         function openGateway() { 
+            if(!auth.currentUser) return openAuthUI();
             const amt = document.getElementById('dep-amt').value; 
             if(!amt || amt < 10) return showAlert("Alert", "মিনিমাম ১০ টাকা এড করতে হবে।"); 
             document.querySelectorAll('.dep-amt-val').forEach(el => el.innerText = amt); 
@@ -871,7 +871,6 @@
                 status: 'pending',
                 timestamp: firebase.database.ServerValue.TIMESTAMP 
             }).then(() => {
-                sendTeleNotify('📩 Deposit Request!\nUser: ' + currentUserEmail + '\nAmount: ' + amt + ' TK\nTrxID: ' + trx + '\nMethod: ' + currentSelectedGatewayMethod); 
                 showAlert("Success", "অনুরোধ পাঠানো হয়েছে!"); 
                 document.getElementById('trx-id').value = '';
                 closeGateway(); 
@@ -881,6 +880,10 @@
         }
 
         function switchSection(id, btn) { 
+            if ((id === 'wallet-sec' || id === 'orders-sec' || id === 'profile-sec') && !auth.currentUser) {
+                openAuthUI();
+                return;
+            }
             currentSection = id; 
             document.querySelectorAll('.app-section').forEach(s => s.classList.add('hidden')); 
             document.getElementById(id).classList.remove('hidden'); 
@@ -905,7 +908,7 @@
         }
         function closePopup() { const p = document.getElementById('custom-popup'); p.classList.remove('show'); setTimeout(() => p.classList.add('hidden'), 300); }
 
-        // --- DRAGGABLE WHATSAPP BUTTON logic ---
+        // --- DRAGGABLE WA LOGIC ---
         const waBtn = document.getElementById('draggable-wa');
         let isDragging = false, offsetX, offsetY;
 
