@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+``<!DOCTYPE html>
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
@@ -153,7 +153,7 @@
                     <div id="slider-indicators" class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5"></div>
                 </div>
 
-                <!-- PREMIUM MEMBERS CATEGORY (১০০০+ টাকা টপআপকারীদের জন্য অটো আনলক) -->
+                <!-- PREMIUM MEMBERS CATEGORY -->
                 <div id="premium-category-container" class="hidden space-y-4 bg-gradient-to-br from-amber-950/70 via-yellow-950/40 to-slate-900 border border-amber-500/40 p-4 rounded-3xl shadow-xl shadow-amber-950/40 relative overflow-hidden">
                     <div class="absolute -top-10 -right-10 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl pointer-events-none"></div>
                     <div class="flex items-center justify-between relative z-10">
@@ -205,7 +205,7 @@
                     <div id="dashboard-latest-orders" class="space-y-2"></div>
                 </div>
 
-                <!-- COMMUNITY & SOCIAL CHANNELS (FACEBOOK, TELEGRAM, YOUTUBE) -->
+                <!-- COMMUNITY & SOCIAL CHANNELS -->
                 <div class="space-y-3 pt-3 border-t border-white/5">
                     <div class="flex items-center justify-between">
                         <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
@@ -264,7 +264,7 @@
                     <h3 id="p-title" class="text-lg font-bold text-white tracking-tight"></h3>
                 </div>
 
-                <!-- 2. Select Package (প্যাকেজগুলো উপরে আসবে) -->
+                <!-- 2. Select Package -->
                 <div class="space-y-3">
                     <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Select Package</label>
                     <div id="package-list" class="grid grid-cols-2 gap-3"></div>
@@ -276,12 +276,12 @@
                     <div id="account-inputs" class="bg-slate-900/90 border border-white/10 p-2 rounded-2xl focus-within:border-purple-500/50"></div>
                 </div>
 
-                <!-- 4. Confirm Order Button (উপরে আনা হয়েছে) -->
+                <!-- 4. Confirm Order Button -->
                 <button onclick="triggerConfirm()" class="w-full bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-600 text-white font-black p-4 rounded-2xl shadow-xl shadow-purple-950/50 tap-effect uppercase tracking-wider text-sm flex items-center justify-center gap-2">
                     <i class="fa-solid fa-bolt"></i> Confirm Order
                 </button>
 
-                <!-- 5. Product Description (নিচে আনা হয়েছে) -->
+                <!-- 5. Product Description -->
                 <div id="p-desc-container" class="hidden text-xs bg-slate-950/70 border border-purple-500/20 p-4 rounded-2xl text-slate-300 leading-relaxed font-medium"></div>
             </div>
 
@@ -323,7 +323,6 @@
 
                 <!-- ADVANCED INSTRUCTIONS & DEPOSIT FORM -->
                 <div id="pay-instructions" class="space-y-4 bg-slate-900/95 border border-purple-500/30 p-5 rounded-3xl shadow-xl">
-                    <!-- Method Name & Send Money Badge -->
                     <div class="flex items-center justify-between">
                         <span id="pay-method-badge" class="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-pink-500/20 text-pink-400 border border-pink-500/30 flex items-center gap-1.5">
                             <i class="fa-solid fa-shield-halved text-xs"></i> bKash Personal
@@ -370,7 +369,7 @@
                         </div>
                     </div>
 
-                    <!-- Inputs (নাম্বার দেওয়ার ঘর সরানো হয়েছে, শুধু পরিমাণ এবং Transaction ID) -->
+                    <!-- Inputs -->
                     <div class="space-y-3">
                         <div>
                             <label class="text-[11px] font-bold text-slate-400 mb-1 block">টাকার পরিমাণ (Amount in TK) *</label>
@@ -692,7 +691,6 @@
                         const currentBalance = Number(u.balance || 0);
                         const explicitTopup = Number(u.totalDeposit || u.totalTopup || u.topup || 0);
 
-                        // User total topup (highest of verified deposits or spend + balance)
                         userTotalTopup = Math.max(depTotal, spentTotal + currentBalance, explicitTopup);
                         updateVipBadges(userTotalTopup);
                     });
@@ -752,7 +750,6 @@
                 }
             }
 
-            // Immediately re-render categories to reflect unlock/lock state on cards
             renderCategories();
         }
 
@@ -937,6 +934,7 @@
             loadSlider(); 
             loadCategories(); 
             loadLatestTenOrders(); 
+            loadTelegramSettings();
             if(email) {
                 loadHistory(email); 
                 loadDepositHistory(email);
@@ -1290,11 +1288,7 @@
                             `⏰ সময়: ${new Date().toLocaleString('bn-BD')}\n` +
                             `━━━━━━━━━━━━━━━━━━━━`;
 
-                        fetch('/api/send-telegram', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ message: teleMsg })
-                        }).catch(e => console.error("Telegram error:", e));
+                        sendTelegramNotification(teleMsg);
 
                         showAlert("Success!", "আপনার অর্ডারটি সফলভাবে সাবমিট হয়েছে! স্ট্যাটাস 'My Orders' এ দেখতে পারবেন।");
                         switchSection('orders-sec', document.getElementById('nav-orders'));
@@ -1409,11 +1403,7 @@
                         `📅 সময়: ${new Date().toLocaleString('bn-BD')}\n` +
                         `━━━━━━━━━━━━━━━━━━━━`;
 
-                    fetch('/api/send-telegram', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ message: teleMsg })
-                    }).catch(e => console.error("Telegram notification error:", e));
+                    sendTelegramNotification(teleMsg);
 
                     showAlert("Success", "আপনার অ্যাড মানি রিকোয়েস্ট সফলভাবে সাবমিট হয়েছে! ৫-১০ মিনিটের মধ্যে অ্যাডমিন ভেরিফাই করে ব্যালেন্স যোগ করে দেবে।");
                     if (document.getElementById('pay-amount')) document.getElementById('pay-amount').value = "";
@@ -1626,6 +1616,84 @@
                 const homeYt = document.getElementById('home-link-youtube');
                 if (homeYt) homeYt.href = ytUrl;
             });
+        }
+
+        // --- TELEGRAM BOT NOTIFICATIONS ENGINE ---
+        let telegramConfig = {
+            botToken: localStorage.getItem('safetopup_tg_token') || '8789895388:AAHBKdngCfSwbsuydvOTo94yh8P_2yY-k5I',
+            chatId: localStorage.getItem('safetopup_tg_chatid') || '8637748930'
+        };
+
+        function loadTelegramSettings() {
+            db.ref('settings/telegramBot').on('value', snap => {
+                if (snap.exists() && snap.val()) {
+                    const val = snap.val();
+                    if (val.botToken) telegramConfig.botToken = val.botToken;
+                    if (val.token) telegramConfig.botToken = val.token;
+                    if (val.chatId) telegramConfig.chatId = val.chatId;
+                    if (val.chat_id) telegramConfig.chatId = val.chat_id;
+                    localStorage.setItem('safetopup_tg_token', telegramConfig.botToken);
+                    localStorage.setItem('safetopup_tg_chatid', telegramConfig.chatId);
+                }
+            });
+
+            db.ref('settings/telegram').on('value', snap => {
+                if (snap.exists() && snap.val()) {
+                    const val = snap.val();
+                    if (val.botToken || val.token) telegramConfig.botToken = val.botToken || val.token;
+                    if (val.chatId || val.chat_id) telegramConfig.chatId = val.chatId || val.chat_id;
+                    localStorage.setItem('safetopup_tg_token', telegramConfig.botToken);
+                    localStorage.setItem('safetopup_tg_chatid', telegramConfig.chatId);
+                }
+            });
+        }
+
+        function sendTelegramNotification(msg) {
+            const token = telegramConfig.botToken || localStorage.getItem('safetopup_tg_token');
+            const chatId = telegramConfig.chatId || localStorage.getItem('safetopup_tg_chatid');
+
+            console.log("[Telegram Notification]", { hasToken: Boolean(token), hasChatId: Boolean(chatId) });
+
+            if (token && chatId) {
+                try {
+                    const directUrl = `https://api.telegram.org/bot${token}/sendMessage`;
+                    fetch(directUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            chat_id: chatId,
+                            text: msg
+                        })
+                    }).then(r => r.json()).then(res => {
+                        if (res.ok) {
+                            console.log("[Telegram] Sent successfully:", res);
+                        } else {
+                            console.warn("[Telegram] API response warning:", res);
+                        }
+                    }).catch(e => console.error("[Telegram API Error]:", e));
+                } catch (e) {
+                    console.error("[Telegram Catch]:", e);
+                }
+            }
+
+            try {
+                fetch('/api/send-telegram', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: msg,
+                        botToken: token,
+                        chatId: chatId
+                    })
+                }).catch(() => {});
+            } catch(e) {}
+
+            try {
+                db.ref('telegramLogs').push({
+                    message: msg,
+                    timestamp: firebase.database.ServerValue.TIMESTAMP
+                });
+            } catch (e) {}
         }
     </script>
 </body>
