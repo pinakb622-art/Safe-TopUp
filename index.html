@@ -264,7 +264,7 @@
                     <h3 id="p-title" class="text-lg font-bold text-white tracking-tight"></h3>
                 </div>
 
-                <!-- 2. Select Package (প্রোডাক্টগুলো উপরে আসবে) -->
+                <!-- 2. Select Package (প্যাকেজগুলো উপরে আসবে) -->
                 <div class="space-y-3">
                     <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Select Package</label>
                     <div id="package-list" class="grid grid-cols-2 gap-3"></div>
@@ -276,13 +276,13 @@
                     <div id="account-inputs" class="bg-slate-900/90 border border-white/10 p-2 rounded-2xl focus-within:border-purple-500/50"></div>
                 </div>
 
-                <!-- 4. Product Description (প্রোডাক্টের ডেসক্রিপশন নিচে যাবে) -->
-                <div id="p-desc-container" class="hidden text-xs bg-slate-950/70 border border-purple-500/20 p-4 rounded-2xl text-slate-300 leading-relaxed font-medium"></div>
-
-                <!-- 5. Confirm Order Button -->
+                <!-- 4. Confirm Order Button (উপরে আনা হয়েছে) -->
                 <button onclick="triggerConfirm()" class="w-full bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-600 text-white font-black p-4 rounded-2xl shadow-xl shadow-purple-950/50 tap-effect uppercase tracking-wider text-sm flex items-center justify-center gap-2">
                     <i class="fa-solid fa-bolt"></i> Confirm Order
                 </button>
+
+                <!-- 5. Product Description (নিচে আনা হয়েছে) -->
+                <div id="p-desc-container" class="hidden text-xs bg-slate-950/70 border border-purple-500/20 p-4 rounded-2xl text-slate-300 leading-relaxed font-medium"></div>
             </div>
 
             <!-- WALLET (ADD MONEY) -->
@@ -352,7 +352,7 @@
                         <ol class="list-decimal list-inside space-y-1 text-[11px] text-slate-300 font-medium leading-relaxed">
                             <li>আপনার বিকাশ/নগদ/রকেট অ্যাপ থেকে <b>"Send Money" (সেন্ড মানি)</b> করুন।</li>
                             <li>প্রাপক নম্বর: <b class="text-emerald-400 font-mono">01909699608</b> (ক্যাশ ইন বা পেমেন্ট গ্রহণযোগ্য নয়)।</li>
-                            <li>সর্বনিম্ন অ্যাড মানি <b>৫০ টাকা</b>।</li>
+                            <li>সর্বনিম্ন অ্যাড মানি <b>২০ টাকা</b>।</li>
                             <li>সেন্ড মানি সফল হলে অ্যাপ বা এসএমএস থেকে <b>TrxID</b> এবং টাকার পরিমাণ নিচে বসিয়ে রিকোয়েস্ট পাঠান।</li>
                         </ol>
                     </div>
@@ -361,24 +361,20 @@
                     <div class="space-y-1.5">
                         <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Quick Amount (টাকার পরিমাণ সিলেক্ট করুন)</label>
                         <div class="grid grid-cols-6 gap-1.5">
+                            <button type="button" onclick="setPayAmount(20)" class="bg-slate-950 border border-white/10 hover:border-purple-400 text-slate-200 hover:text-white py-1.5 rounded-xl text-xs font-bold tap-effect">৳20</button>
                             <button type="button" onclick="setPayAmount(50)" class="bg-slate-950 border border-white/10 hover:border-purple-400 text-slate-200 hover:text-white py-1.5 rounded-xl text-xs font-bold tap-effect">৳50</button>
                             <button type="button" onclick="setPayAmount(100)" class="bg-slate-950 border border-white/10 hover:border-purple-400 text-slate-200 hover:text-white py-1.5 rounded-xl text-xs font-bold tap-effect">৳100</button>
                             <button type="button" onclick="setPayAmount(200)" class="bg-slate-950 border border-white/10 hover:border-purple-400 text-slate-200 hover:text-white py-1.5 rounded-xl text-xs font-bold tap-effect">৳200</button>
                             <button type="button" onclick="setPayAmount(500)" class="bg-slate-950 border border-white/10 hover:border-purple-400 text-slate-200 hover:text-white py-1.5 rounded-xl text-xs font-bold tap-effect">৳500</button>
                             <button type="button" onclick="setPayAmount(1000)" class="bg-slate-950 border border-white/10 hover:border-purple-400 text-slate-200 hover:text-white py-1.5 rounded-xl text-xs font-bold tap-effect">৳1000</button>
-                            <button type="button" onclick="setPayAmount(2000)" class="bg-slate-950 border border-white/10 hover:border-purple-400 text-slate-200 hover:text-white py-1.5 rounded-xl text-xs font-bold tap-effect">৳2000</button>
                         </div>
                     </div>
 
-                    <!-- Inputs -->
+                    <!-- Inputs (নাম্বার দেওয়ার ঘর সরানো হয়েছে, শুধু পরিমাণ এবং Transaction ID) -->
                     <div class="space-y-3">
                         <div>
                             <label class="text-[11px] font-bold text-slate-400 mb-1 block">টাকার পরিমাণ (Amount in TK) *</label>
-                            <input type="number" id="pay-amount" class="w-full bg-slate-950 text-white border border-white/10 rounded-2xl p-3.5 text-sm font-bold outline-none focus:border-purple-500 shadow-inner" placeholder="টাকার পরিমাণ লিখুন (যেমন: ১০০)">
-                        </div>
-                        <div>
-                            <label class="text-[11px] font-bold text-slate-400 mb-1 block">যে নাম্বার থেকে টাকা পাঠিয়েছেন (Sender Number)</label>
-                            <input type="tel" id="pay-sender-phone" class="w-full bg-slate-950 text-white border border-white/10 rounded-2xl p-3.5 text-sm font-semibold outline-none focus:border-purple-500 shadow-inner" placeholder="01XXXXXXXXX (আপনার সেন্ডার নম্বর)">
+                            <input type="number" id="pay-amount" min="20" class="w-full bg-slate-950 text-white border border-white/10 rounded-2xl p-3.5 text-sm font-bold outline-none focus:border-purple-500 shadow-inner" placeholder="টাকার পরিমাণ লিখুন (যেমন: ২০)">
                         </div>
                         <div>
                             <label class="text-[11px] font-bold text-slate-400 mb-1 block">Transaction ID (TrxID) *</label>
@@ -1033,10 +1029,9 @@
 
                 if(isPrem && premList && premCont) {
                     premiumCount++;
-                    premCont.classList.remove('hidden'); // Show premium section if added by admin
+                    premCont.classList.remove('hidden');
 
                     if (!isUserUnlocked) {
-                        // LOCKED VIEW: User has not topped up 1000+ TK
                         premList.innerHTML += `
                             <div class="relative bg-slate-900/90 border border-amber-500/30 p-3 rounded-2xl text-center shadow-lg tap-effect transition-all cursor-pointer overflow-hidden group select-none hover:border-amber-500/60" onclick="showPremiumLockAlert(${userTotalTopup})">
                                 <div class="absolute inset-0 bg-slate-950/85 backdrop-blur-[1px] z-20 flex flex-col items-center justify-center p-1 text-center">
@@ -1050,7 +1045,6 @@
                                 <p class="text-[10px] font-bold text-slate-400 mt-2 truncate uppercase">${displayName}</p>
                             </div>`;
                     } else {
-                        // UNLOCKED VIEW: User has topped up 1000+ TK, full access!
                         premList.innerHTML += `
                             <div class="relative bg-gradient-to-b from-amber-950/40 to-slate-900/95 border-2 border-amber-500/60 hover:border-amber-400 p-3 rounded-2xl text-center shadow-xl shadow-amber-950/40 tap-effect transition-all cursor-pointer group ${isOut ? 'stock-out' : ''}" onclick="${isOut ? '' : `openProduct('${p.id}')`}">
                                 <span class="absolute top-2 right-2 bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 text-slate-950 font-black text-[9px] px-1.5 py-0.5 rounded-md shadow-md flex items-center gap-0.5 z-10 animate-pulse">
@@ -1078,7 +1072,6 @@
                 }
             });
 
-            // If premiumCount is 0, premium section stays cleanly hidden until added by admin
             if (premiumCount === 0 && premCont) {
                 premCont.classList.add('hidden');
             }
@@ -1107,7 +1100,6 @@
                         if (v) orders.push(v); 
                     });
                 }
-                // Sort newest first
                 orders.sort((a, b) => {
                     const timeA = a.timestamp || (a.createdAt ? new Date(a.createdAt).getTime() : 0) || 0;
                     const timeB = b.timestamp || (b.createdAt ? new Date(b.createdAt).getTime() : 0) || 0;
@@ -1163,7 +1155,6 @@
                 );
                 const isUnlocked = Boolean(currentUserEmail) && (userTotalTopup >= 1000);
 
-                // Prevent opening if product is premium and user is locked (<1000 TK topup)
                 if (isPrem && !isUnlocked) {
                     showPremiumLockAlert(userTotalTopup);
                     return;
@@ -1221,7 +1212,6 @@
             if(!auth.currentUser) return openAuthUI(); 
             if(!selPkg) return showAlert("Alert", "Package সিলেক্ট করুন!"); 
 
-            // Strict Premium Member Check
             const isPrem = Boolean(selectedProductData && (selectedProductData.isPremium || selectedProductData.isVip || selectedProductData.isVIP || selectedProductData.premium || selectedProductData.category === 'premium' || selectedProductData.category === 'vip' || selectedProductData.type === 'premium'));
             if (isPrem && userTotalTopup < 1000) {
                 showPremiumLockAlert(userTotalTopup);
@@ -1238,7 +1228,6 @@
             if(!currentUser) return openAuthUI();
             const email = (currentUser.email || '').trim();
 
-            // Strict Premium Member Check
             const isPrem = Boolean(selectedProductData && (selectedProductData.isPremium || selectedProductData.isVip || selectedProductData.isVIP || selectedProductData.premium || selectedProductData.category === 'premium' || selectedProductData.category === 'vip' || selectedProductData.type === 'premium'));
             if (isPrem && userTotalTopup < 1000) {
                 showPremiumLockAlert(userTotalTopup);
@@ -1254,13 +1243,11 @@
 
             const emailKey = email.toLowerCase().replace(/\./g, ',');
 
-            // Fetch user info from Firebase users list
             db.ref('users/' + emailKey).once('value', uSnap => {
                 const uData = uSnap.val() || {};
                 const userName = uData.name || email.split('@')[0];
                 const userPhone = uData.phone || "দেওয়া হয়নি";
 
-                // Deduct balance atomically
                 db.ref('users/' + emailKey + '/balance').transaction(current => {
                     if((current || 0) < selPkg.price) return;
                     return current - selPkg.price;
@@ -1286,9 +1273,7 @@
                         teleNotified: true 
                     };
 
-                    // Write order
                     db.ref('orders/' + oId).set(orderData).then(() => {
-                        // SEND COMPREHENSIVE TELEGRAM NOTIFICATION
                         const memberInfo = (userTotalTopup >= 1000) ? "👑 প্রিমিয়াম মেম্বার (১০০০+ TK টপআপ)" : "সাধারণ মেম্বার";
                         const teleMsg = 
                             `📦 [Safe Topup] নতুন অর্ডার এসেছে! ${isPrem ? '👑 [PREMIUM OFFER]' : ''}\n` +
@@ -1311,7 +1296,7 @@
                             body: JSON.stringify({ message: teleMsg })
                         }).catch(e => console.error("Telegram error:", e));
 
-                        showAlert("Success!", "আপনর অর্ডারটি সফলভাবে সাবমিট হয়েছে! স্ট্যাটাস 'My Orders' এ দেখতে পারবেন।");
+                        showAlert("Success!", "আপনার অর্ডারটি সফলভাবে সাবমিট হয়েছে! স্ট্যাটাস 'My Orders' এ দেখতে পারবেন।");
                         switchSection('orders-sec', document.getElementById('nav-orders'));
                     });
                 });
@@ -1378,9 +1363,8 @@
             const email = (user.email || '').trim();
             const amt = document.getElementById('pay-amount')?.value.trim();
             const trx = document.getElementById('pay-trx')?.value.trim();
-            const senderPhone = document.getElementById('pay-sender-phone')?.value.trim() || '';
 
-            if(!amt || Number(amt) < 10) return showAlert("Error", "সঠিক পরিমাণ লিখুন (সর্বনিম্ন ১০ টাকা)");
+            if(!amt || Number(amt) < 20) return showAlert("Error", "সঠিক পরিমাণ লিখুন (সর্বনিম্ন ২০ টাকা)");
             if(!trx) return showAlert("Error", "Transaction ID (TrxID) প্রদান করুন");
 
             const depId = "DEP" + Date.now();
@@ -1390,7 +1374,7 @@
             db.ref('users/' + emailKey).once('value', uSnap => {
                 const uData = uSnap.val() || {};
                 const userName = uData.name || email.split('@')[0];
-                const userPhone = senderPhone || uData.phone || "দেওয়া হয়নি";
+                const userPhone = uData.phone || "দেওয়া হয়নি";
                 const methodName = (selectedPayMethod || 'bKash').toUpperCase();
 
                 const depData = {
@@ -1399,7 +1383,6 @@
                     userEmail: email,
                     userName: userName,
                     userPhone: userPhone,
-                    senderNumber: senderPhone,
                     amount: Number(amt),
                     trxId: trx,
                     txnId: trx,
@@ -1408,19 +1391,17 @@
                     timestamp: firebase.database.ServerValue.TIMESTAMP
                 };
 
-                // Save to both deposits and addMoneyRequests for instant sync
                 Promise.all([
                     db.ref('deposits/' + depId).set(depData),
                     db.ref('addMoneyRequests/' + reqId).set(depData)
                 ]).then(() => {
-                    // Send instant Telegram notification
                     const teleMsg = 
                         `💰 [Safe Topup] নতুন অ্যাড মানি রিকোয়েস্ট!\n` +
                         `━━━━━━━━━━━━━━━━━━━━\n` +
                         `🆔 Request ID: ${reqId}\n` +
                         `👤 ইউজার: ${userName}\n` +
                         `📧 ইমেইল: ${email}\n` +
-                        `📱 ফোন / সেন্ডার: ${userPhone}\n` +
+                        `📱 ফোন: ${userPhone}\n` +
                         `💳 মেথড: ${methodName} Personal\n` +
                         `💵 পরিমাণ: ${amt} TK\n` +
                         `🔢 TrxID: ${trx}\n` +
@@ -1437,7 +1418,6 @@
                     showAlert("Success", "আপনার অ্যাড মানি রিকোয়েস্ট সফলভাবে সাবমিট হয়েছে! ৫-১০ মিনিটের মধ্যে অ্যাডমিন ভেরিফাই করে ব্যালেন্স যোগ করে দেবে।");
                     if (document.getElementById('pay-amount')) document.getElementById('pay-amount').value = "";
                     if (document.getElementById('pay-trx')) document.getElementById('pay-trx').value = "";
-                    if (document.getElementById('pay-sender-phone')) document.getElementById('pay-sender-phone').value = "";
                 }).catch(err => {
                     showAlert("Error", "রিকোয়েস্ট পাঠাতে সমস্যা হয়েছে: " + err.message);
                 });
@@ -1475,7 +1455,6 @@
                     return;
                 }
 
-                // Sort newest first
                 userDeposits.sort((a, b) => {
                     const timeA = a.timestamp || (a.createdAt ? new Date(a.createdAt).getTime() : 0) || 0;
                     const timeB = b.timestamp || (b.createdAt ? new Date(b.createdAt).getTime() : 0) || 0;
@@ -1522,7 +1501,7 @@
             });
         }
 
-        // --- LOAD ORDERS & HISTORY (OLD & NEW ALL ORDERS) ---
+        // --- LOAD ORDERS & HISTORY ---
         function loadHistory(email) {
             if (!email) {
                 const list = document.getElementById('orders-list') || document.getElementById('history-list');
@@ -1559,7 +1538,6 @@
                     return;
                 }
 
-                // Sort newest orders first
                 userOrders.sort((a, b) => {
                     const timeA = a.timestamp || (a.createdAt ? new Date(a.createdAt).getTime() : 0) || 0;
                     const timeB = b.timestamp || (b.createdAt ? new Date(b.createdAt).getTime() : 0) || 0;
@@ -1616,14 +1594,13 @@
             });
         }
 
-        // --- LOAD SOCIAL & CONTACT LINKS (WHATSAPP, FACEBOOK, TELEGRAM, YOUTUBE) ---
+        // --- LOAD SOCIAL & CONTACT LINKS ---
         function loadContactLinks() {
             db.ref('settings').on('value', snap => {
                 const settings = snap.val() || {};
                 const c = settings.contacts || {};
                 const s = settings.socialLinks || {};
 
-                // Default WhatsApp number is strictly 01909699608 as requested by user
                 const rawWa = (c.whatsapp || "01909699608").replace(/[^0-9]/g, '');
                 const cleanWa = rawWa.startsWith('88') ? rawWa : ('88' + rawWa);
                 const waUrl = `https://wa.me/${cleanWa}?text=${encodeURIComponent("Hello Safe Topup Support")}`;
@@ -1634,12 +1611,10 @@
                 const wLink = document.getElementById('link-whatsapp');
                 if (wLink) wLink.href = waUrl;
 
-                // Facebook URL (using the group/page link from Firebase or default)
                 const fbUrl = s.facebook || c.facebook || "https://www.facebook.com/share/1S51p6fXQA/";
                 const homeFb = document.getElementById('home-link-facebook');
                 if (homeFb) homeFb.href = fbUrl;
 
-                // Telegram URL
                 const tgHandle = (s.telegram || c.telegram || "safetopup").replace('@', '').replace('https://t.me/', '');
                 const tgUrl = `https://t.me/${tgHandle}`;
                 const tLink = document.getElementById('link-telegram');
@@ -1647,7 +1622,6 @@
                 const homeTg = document.getElementById('home-link-telegram');
                 if (homeTg) homeTg.href = tgUrl;
 
-                // YouTube URL
                 const ytUrl = s.youtube || c.youtube || "https://www.youtube.com/@Ffpinakgemar-e7w";
                 const homeYt = document.getElementById('home-link-youtube');
                 if (homeYt) homeYt.href = ytUrl;
