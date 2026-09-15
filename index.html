@@ -1258,26 +1258,41 @@
             }
 
             try {
-                // First try local backend proxy (bypasses CORS)
                 let data = null;
-                try {
-                    const localRes = await fetch(`/api/check-player-id?uid=${encodeURIComponent(uid)}`);
-                    if (localRes.ok) {
-                        data = await localRes.json();
-                    }
-                } catch (e) {
-                    console.warn("Local check-player-id error, trying direct:", e);
-                }
 
-                // If local proxy failed or returned not found, try direct upstream
-                if (!data || !data.success) {
+                // Endpoints to try sequentially:
+                // 1. Same-origin relative URL (if hosted on full-stack server)
+                // 2. Dedicated Cloud Run proxy with CORS headers enabled (works 100% on GitHub Pages and Hopwab)
+                // 3. Direct upstream fallback (for WebViews, mobile apps, or local environments)
+                const candidateEndpoints = [
+                    `/api/check-player-id?uid=${encodeURIComponent(uid)}`,
+                    `https://ais-pre-nfg62b6qipuck2cnq464x5-336894963285.asia-southeast1.run.app/api/check-player-id?uid=${encodeURIComponent(uid)}`,
+                    `https://ais-dev-nfg62b6qipuck2cnq464x5-336894963285.asia-southeast1.run.app/api/check-player-id?uid=${encodeURIComponent(uid)}`,
+                    `https://infoxvisits.tsunxkittens.app/info/${encodeURIComponent(uid)}`
+                ];
+
+                for (const url of candidateEndpoints) {
                     try {
-                        const directRes = await fetch(`https://infoxvisits.tsunxkittens.app/info/${encodeURIComponent(uid)}`);
-                        if (directRes.ok) {
-                            const parsed = await directRes.json();
-                            const accName = parsed?.AccountInfo?.AccountName || parsed?.basicInfo?.nickname || parsed?.nickname;
-                            const accLvl = parsed?.AccountInfo?.AccountLevel || parsed?.basicInfo?.level;
-                            const accReg = parsed?.AccountInfo?.AccountRegion || parsed?.basicInfo?.region;
+                        const controller = new AbortController();
+                        const timer = setTimeout(() => controller.abort(), 6000);
+                        const res = await fetch(url, {
+                            headers: { "Accept": "application/json" },
+                            signal: controller.signal
+                        });
+                        clearTimeout(timer);
+
+                        if (res.ok) {
+                            const parsed = await res.json();
+                            // Handle backend proxy format
+                            if (parsed && parsed.success && parsed.name) {
+                                data = parsed;
+                                break;
+                            }
+                            // Handle raw upstream format
+                            const accInfo = parsed?.AccountInfo || parsed?.basicInfo || parsed?.basicinfo;
+                            const accName = accInfo?.AccountName || accInfo?.nickname || parsed?.nickname;
+                            const accLvl = accInfo?.AccountLevel || accInfo?.level || parsed?.level;
+                            const accReg = accInfo?.AccountRegion || accInfo?.region || parsed?.region || "BD";
                             if (accName) {
                                 data = {
                                     success: true,
@@ -1286,10 +1301,11 @@
                                     level: accLvl,
                                     region: accReg
                                 };
+                                break;
                             }
                         }
-                    } catch (e) {
-                        console.warn("Direct check error:", e);
+                    } catch (netErr) {
+                        console.warn(`[PlayerCheck] Endpoint failed: ${url}`, netErr?.message || netErr);
                     }
                 }
 
@@ -1326,7 +1342,7 @@
                     verifiedPlayerInfo = null;
                     if (resBox) {
                         resBox.className = "mt-2 p-3 rounded-xl bg-rose-950/50 border border-rose-500/30 text-xs text-rose-300 shadow-md flex items-center gap-2";
-                        resBox.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-rose-400 text-sm"></i> <span>প্লেয়ার আইডি পাওয়া যায়নি! সঠিক UID নিশ্চিত করুন।</span>`;
+                        resBox.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-rose-400 text-sm"></i> <span>প্লেয়ার আইডি পাওয়া যায়নি! সঠিক UID নিশ্চিত করুন অথবা সরাসরি অর্ডার কনফার্ম করুন।</span>`;
                     }
                 }
             } catch (err) {
