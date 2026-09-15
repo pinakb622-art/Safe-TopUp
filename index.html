@@ -1191,171 +1191,12 @@
                 });
 
                 const inputs = document.getElementById('account-inputs');
-                if(d.type === 'full') {
-                    inputs.innerHTML = `<input type="text" id="i-email" class="w-full bg-slate-950 text-white border-b border-purple-500/30 p-3 text-sm font-bold outline-none focus:border-purple-400" placeholder="Email/Number"><input type="text" id="i-pass" class="w-full bg-slate-950 text-white border-b border-purple-500/30 p-3 text-sm font-bold outline-none focus:border-purple-400" placeholder="Password">`;
-                } else if(d.type === 'voucher') {
-                    inputs.innerHTML = `<p class="text-center py-4 text-slate-400 italic">Voucher ক্যাটাগরি, সরাসরি কনফার্ম করুন।</p>`;
-                } else {
-                    inputs.innerHTML = `
-                        <div class="space-y-2.5 p-1">
-                            <div>
-                                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Player ID (UID)</label>
-                                <input type="number" id="i-uid" class="w-full bg-slate-950 text-purple-300 border border-purple-500/30 rounded-xl p-3 text-base font-bold outline-none focus:border-purple-400 placeholder:text-slate-600 shadow-inner" placeholder="Enter Player ID (UID)" oninput="handleUidChange()">
-                            </div>
-                            
-                            <!-- Player ID Check Button & Result Card -->
-                            <div class="pt-1">
-                                <button type="button" id="btn-check-uid" onclick="checkPlayerId()" class="w-full bg-slate-800 hover:bg-slate-700 text-sky-300 border border-sky-500/30 font-bold py-2.5 px-4 rounded-xl tap-effect text-xs flex items-center justify-center gap-2 shadow-md transition-all">
-                                    <i class="fa-solid fa-user-check text-sky-400"></i> প্লেয়ার আইডি চেক (Check Player Name)
-                                </button>
-                                
-                                <div id="uid-result-box" class="hidden mt-2 p-3 rounded-xl bg-slate-950/90 border transition-all text-xs">
-                                </div>
-                            </div>
-                        </div>`;
-                }
+                if(d.type === 'full') inputs.innerHTML = `<input type="text" id="i-email" class="w-full bg-slate-950 text-white border-b border-purple-500/30 p-3 text-sm font-bold outline-none focus:border-purple-400" placeholder="Email/Number"><input type="text" id="i-pass" class="w-full bg-slate-950 text-white border-b border-purple-500/30 p-3 text-sm font-bold outline-none focus:border-purple-400" placeholder="Password">`;
+                else if(d.type === 'voucher') inputs.innerHTML = `<p class="text-center py-4 text-slate-400 italic">Voucher ক্যাটাগরি, সরাসরি কনফার্ম করুন।</p>`;
+                else inputs.innerHTML = `<input type="number" id="i-uid" class="w-full bg-slate-950 text-purple-300 border-b border-purple-500/30 p-3 text-lg font-bold outline-none focus:border-purple-400" placeholder="Enter Player ID">`;
                 
                 switchSection('product-sec');
             });
-        }
-
-        let verifiedPlayerInfo = null;
-
-        function handleUidChange() {
-            verifiedPlayerInfo = null;
-            const resBox = document.getElementById('uid-result-box');
-            if (resBox) {
-                resBox.classList.add('hidden');
-                resBox.innerHTML = '';
-            }
-        }
-
-        async function checkPlayerId() {
-            const uidInp = document.getElementById('i-uid');
-            const uid = uidInp?.value.trim();
-            const btn = document.getElementById('btn-check-uid');
-            const resBox = document.getElementById('uid-result-box');
-
-            if (!uid) {
-                showAlert("প্লেয়ার আইডি দিন", "দয়া করে প্রথমে Player ID (UID) এর ঘরে আপনার গেম আইডি নাম্বারটি লিখুন।");
-                return;
-            }
-
-            if (!/^\d{5,15}$/.test(uid)) {
-                showAlert("ভুল আইডি", "দয়া করে সঠিক Player ID (UID) নাম্বার দিন (সাধারণত ৮-১০ ডিজিটের সংখ্যা হয়)।");
-                return;
-            }
-
-            if (btn) {
-                btn.disabled = true;
-                btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin text-sky-400"></i> যাচাই করা হচ্ছে...`;
-            }
-
-            if (resBox) {
-                resBox.classList.remove('hidden');
-                resBox.className = "mt-2 p-3 rounded-xl bg-slate-950/90 border border-sky-500/30 text-xs flex items-center gap-2 text-slate-300 shadow-inner";
-                resBox.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin text-sky-400 text-sm"></i> <span>গেম সার্ভার থেকে প্লেয়ার নাম খোঁজা হচ্ছে...</span>`;
-            }
-
-            try {
-                let data = null;
-
-                // Endpoints to try sequentially:
-                // 1. Same-origin relative URL (if hosted on full-stack server)
-                // 2. Dedicated Cloud Run proxy with CORS headers enabled (works 100% on GitHub Pages and Hopwab)
-                // 3. Direct upstream fallback (for WebViews, mobile apps, or local environments)
-                const candidateEndpoints = [
-                    `/api/check-player-id?uid=${encodeURIComponent(uid)}`,
-                    `https://ais-pre-nfg62b6qipuck2cnq464x5-336894963285.asia-southeast1.run.app/api/check-player-id?uid=${encodeURIComponent(uid)}`,
-                    `https://ais-dev-nfg62b6qipuck2cnq464x5-336894963285.asia-southeast1.run.app/api/check-player-id?uid=${encodeURIComponent(uid)}`,
-                    `https://infoxvisits.tsunxkittens.app/info/${encodeURIComponent(uid)}`
-                ];
-
-                for (const url of candidateEndpoints) {
-                    try {
-                        const controller = new AbortController();
-                        const timer = setTimeout(() => controller.abort(), 6000);
-                        const res = await fetch(url, {
-                            headers: { "Accept": "application/json" },
-                            signal: controller.signal
-                        });
-                        clearTimeout(timer);
-
-                        if (res.ok) {
-                            const parsed = await res.json();
-                            // Handle backend proxy format
-                            if (parsed && parsed.success && parsed.name) {
-                                data = parsed;
-                                break;
-                            }
-                            // Handle raw upstream format
-                            const accInfo = parsed?.AccountInfo || parsed?.basicInfo || parsed?.basicinfo;
-                            const accName = accInfo?.AccountName || accInfo?.nickname || parsed?.nickname;
-                            const accLvl = accInfo?.AccountLevel || accInfo?.level || parsed?.level;
-                            const accReg = accInfo?.AccountRegion || accInfo?.region || parsed?.region || "BD";
-                            if (accName) {
-                                data = {
-                                    success: true,
-                                    uid: uid,
-                                    name: accName,
-                                    level: accLvl,
-                                    region: accReg
-                                };
-                                break;
-                            }
-                        }
-                    } catch (netErr) {
-                        console.warn(`[PlayerCheck] Endpoint failed: ${url}`, netErr?.message || netErr);
-                    }
-                }
-
-                if (data && data.success && data.name) {
-                    verifiedPlayerInfo = {
-                        uid: uid,
-                        name: data.name,
-                        level: data.level,
-                        region: data.region
-                    };
-
-                    if (resBox) {
-                        resBox.className = "mt-2 p-3.5 rounded-xl bg-gradient-to-r from-emerald-950/60 via-slate-900 to-slate-950 border border-emerald-500/40 text-xs shadow-lg space-y-1.5 animate-pop";
-                        resBox.innerHTML = `
-                            <div class="flex items-center justify-between">
-                                <span class="text-[11px] font-bold text-emerald-400 flex items-center gap-1.5">
-                                    <i class="fa-solid fa-circle-check text-emerald-400"></i> প্লেয়ার আইডি ভেরিফাইড
-                                </span>
-                                ${data.region ? `<span class="text-[9px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full font-bold uppercase">${data.region}</span>` : ''}
-                            </div>
-                            <div class="bg-slate-950/80 p-2.5 rounded-lg border border-white/5 flex items-center justify-between">
-                                <div>
-                                    <p class="text-[9px] text-slate-400 uppercase font-bold">Game Nickname (আইডির নাম)</p>
-                                    <p class="text-sm font-black text-white tracking-wide flex items-center gap-1.5 mt-0.5">
-                                        <i class="fa-solid fa-gamepad text-purple-400"></i> <span class="text-emerald-300">${data.name}</span>
-                                    </p>
-                                </div>
-                                ${data.level ? `<div class="text-right"><span class="text-[9px] text-slate-400 font-bold block">Level</span><span class="text-xs font-black text-amber-400">Lv. ${data.level}</span></div>` : ''}
-                            </div>
-                        `;
-                    }
-                    showToast(`প্লেয়ার নাম: ${data.name}`);
-                } else {
-                    verifiedPlayerInfo = null;
-                    if (resBox) {
-                        resBox.className = "mt-2 p-3 rounded-xl bg-rose-950/50 border border-rose-500/30 text-xs text-rose-300 shadow-md flex items-center gap-2";
-                        resBox.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-rose-400 text-sm"></i> <span>প্লেয়ার আইডি পাওয়া যায়নি! সঠিক UID নিশ্চিত করুন অথবা সরাসরি অর্ডার কনফার্ম করুন।</span>`;
-                    }
-                }
-            } catch (err) {
-                if (resBox) {
-                    resBox.className = "mt-2 p-3 rounded-xl bg-amber-950/50 border border-amber-500/30 text-xs text-amber-300 shadow-md flex items-center gap-2";
-                    resBox.innerHTML = `<i class="fa-solid fa-circle-exclamation text-amber-400 text-sm"></i> <span>সার্ভার থেকে নাম আনা সম্ভব হয়নি, তবে আপনি সরাসরি অর্ডার করতে পারেন।</span>`;
-                }
-            } finally {
-                if (btn) {
-                    btn.disabled = false;
-                    btn.innerHTML = `<i class="fa-solid fa-user-check text-sky-400"></i> প্লেয়ার আইডি চেক (Check Player Name)`;
-                }
-            }
         }
 
         function selectPkg(i, n, p) { 
@@ -1393,11 +1234,7 @@
 
             const oId = "ORD" + Date.now().toString().slice(-6);
             
-            let rawUid = document.getElementById('i-uid')?.value?.trim();
-            let info = rawUid || document.getElementById('i-email')?.value || "Voucher Order";
-            if (rawUid && verifiedPlayerInfo && verifiedPlayerInfo.uid === rawUid && verifiedPlayerInfo.name) {
-                info += ` (Name: ${verifiedPlayerInfo.name})`;
-            }
+            let info = document.getElementById('i-uid')?.value || document.getElementById('i-email')?.value || "Voucher Order";
             if(document.getElementById('i-pass')?.value) {
                 info += " | Pass: " + document.getElementById('i-pass').value;
             }
